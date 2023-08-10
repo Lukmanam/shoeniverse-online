@@ -1,0 +1,166 @@
+<%- include('../layouts/adminlayout/header.ejs') %>
+    <main class="main-wrap">
+
+        <section class="content-main">
+            <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">Edit Product</h2>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <form action="/admin/editProduct?id=<%=product._id %>" method="POST" enctype="multipart/form-data">
+                                        <h6>1. General info</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label" for="productName">Product Name</label>
+                                        <input type="text" id="productName" name="name" placeholder="Type here"
+                                        class="form-control" value="<%= product.name %>" required 
+                                        pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$" 
+                                        title="Please enter only letters, numbers, and spaces (single space between words allowed)">
+                                 
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label" for="category">Category</label>
+                                        <select class="form-select" id="category" name="category" required>
+                                            <% category.forEach(function (category) { %>
+                                                <option value="<%= category.name %>">
+                                                    <%= category.name %>
+                                                </option>
+                                                <% }); %>
+
+                                        </select>
+                                    </div>
+
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>2. Pricing</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="price" class="form-label">Cost in INR</label>
+                                        <input type="text" id="price" name="price" placeholder="₹00.0" value="<%= product.price %>"
+                                            class="form-control" required>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>3. Quantity</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label for="quantity" class="form-label">Quantity to be Stocked</label>
+                                        <input type="number" id="quantity" name="quantity" placeholder=" 0"
+                                            class="form-control" value="<%= product.quantity %>" required>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>4. Description</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        
+                                        <label for="description" class="form-label">Description</label>
+                                        <input type="text " id="description" name="description" placeholder="Type here"
+                                            class="form-control" rows="4" value="<%= product.description %>" required></textarea>
+                                    </div>
+
+
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>5. Media</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <!-- <div class="mb-4">
+                                        <label for="product image" class="form-label">Images</label>
+                                        <% product.image.forEach((image) => {%>
+                                        <div class="input-upload">
+                                            <img style="border-radius: 10%;"
+                                              id="product_img" width="100" src="/adminAsset/IMAGES/<%= product.image%>" alt=""/>
+                                            <%}) %>
+                              
+                                        <input type="file" name="Image" class="form-control" id="productImage" onchange="viewImage(event)"
+                                            multiple>
+                                    </div> -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Images</label>
+                                        <div class="mb-4 d-flex">
+                                            <% product.image.forEach(image => { %>
+                                            <div class="border border-info">
+                                                <img src="/adminAsset/IMAGES/<%= image %>" class="img-sm img-thumbnail" alt="item"><br>
+                                                <span><a href="/admin/deleteImage?fileName=<%= image %>&id=<%= product._id %>"><i class="icon material-icons md-delete"></i></a></span>
+            
+                                            </div>
+                                            <% }) %>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="mb-4">
+                                                <label for="product image" class="form-label">Images</label>
+                                                <input type="file" class="form-control" id="productImage" name="productImage"
+                                                    multiple required>
+        
+                                            </div>
+                                        </div> 
+                                        
+                                      
+                                </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                            <div class="button">
+                                <button class="btn btn-primary" type="submit" value="Save">Edit & SAVE</button>
+                            </div>
+                            
+
+                            
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section> <!-- content-main end// -->
+    </main>
+    <%- include("../layouts/adminlayout/footer.ejs") %>
+    
+
+    <script>
+        const fileInput = document.getElementById('productImage');
+        const allowedFormats = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
+
+        fileInput.addEventListener('change', function () {
+            const selectedFiles = Array.from(fileInput.files);
+            const invalidFiles = selectedFiles.filter(file => {
+                const fileExt = getFileExtension(file.name);
+                return !allowedFormats.includes(fileExt);
+            });
+
+            if (invalidFiles.length > 0) {
+                alert('Invalid file format. Only jpeg, jpg, png, gif, and webp files are allowed.');
+                fileInput.value = ''; // Clear the selected files to allow reselection
+            }
+        });
+
+        function getFileExtension(filename) {
+            return filename.split('.').pop().toLowerCase();
+        }
+    </script>

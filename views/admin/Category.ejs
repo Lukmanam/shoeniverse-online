@@ -1,0 +1,127 @@
+<%- include('../layouts/adminlayout/header.ejs') %>
+    <main class="main-wrap">
+
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Categories</h2>
+                    <p>Add or edit a category</p>
+                </div>
+                <div class="d-grid">
+                    <a href="/admin/addCategory"> <button class="btn btn-primary">Add New Category</button></a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="row">
+
+                        <div class="col-md-9">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                           <th><th><th></th></th></th>
+                                            
+                                        
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% category.forEach((category)=>
+                                            { %>
+                                            <tr>
+                                                <td>
+                                                    <%= category.name %>
+                                                </td>
+                                                <td>
+                                                    <%= category.description%>
+                                                </td>
+                                                <td><a href="/admin/editCategory?name=<%= category.name %>"><button
+                                                            class="btn btn-sm btn-info rounded form-control-sm">EDIT</button></a>
+                                                </td>
+
+                                                <% if(category.blocked==true) { %>
+                                                    <td> <span class="badge rounded-pill alert-danger"
+                                                            id="block1<%= category.name %>">Unlisted</span>
+                                                        <span class="badge rounded-pill alert-success"
+                                                            id="block2<%= category.name %>"></span>
+                                                    </td>
+                                                    <% } else { %>
+                                                        <td><span id="block2<%=category.name%>"
+                                                                class="badge rounded-pill alert-success">Listed</span>
+                                                            <span id="block1<%=category.name%>"
+                                                                class="badge rounded-pill alert-danger"></span>
+                                                        </td>
+                                                        <% } %>
+
+                                                            <td> <button id="catid<%=category.name%>"
+                                                                    class="btn btn-sm btn-danger rounded font-sm mt-15"
+                                                                    onclick="Unlist('<%=category.name%>')">
+                                                                    <%if(category.blocked==false){%> Unlist <% }else{%>
+                                                                            List <% }%>
+                                                                </button></td>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- .col// -->
+                    </div>
+                    <!-- .row // -->
+                </div>
+                <!-- card body ./
+            </div>
+            <!-- card .// -->
+        </section>
+        <!-- content-main end// -->
+        <%- include("../layouts/adminlayout/footer.ejs") %>
+
+            // <footer class="main-footer font-xs">
+                // <div class="row pb-30 pt-15">
+
+                    // </footer>
+            //
+    </main>
+    //
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    //
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    //
+    <script src="assets/js/vendors/select2.min.js"></script>
+    //
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    //
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+    // <!-- Main Script -->
+    //
+    <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+    // </body>
+
+    //
+
+
+
+    <script>
+        const Unlist = async (catgname) => {
+            try {
+                const Unlist = await axios.patch("/admin/unlistCategory", { catgname });
+
+                if (Unlist.data.message === true) {
+                    document.getElementById(`catid${catgname}`).textContent = 'List';
+                    document.getElementById(`block1${catgname}`).innerText = 'Unlisted';
+                    document.getElementById(`block2${catgname}`).innerText = '';
+                }
+                else if (Unlist.data.message === false) {
+        document.getElementById(`catid${catgname}`).textContent = 'Unlist';
+        document.getElementById(`block2${catgname}`).innerText = 'Listed';
+        document.getElementById(`block1${catgname}`).innerText = ''; // Clear the content of the 'Blocked' span
+
+                }
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
+
+    </script>

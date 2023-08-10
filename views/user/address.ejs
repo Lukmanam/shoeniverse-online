@@ -1,0 +1,69 @@
+<!-- address.ejs -->
+
+<%- include('../layouts/userlayout/header.ejs') %>
+
+<section class="ftco-section bg-light">
+    <div class="text-center mb-5"> <h1>ADDRESSES</h1></div>
+  <div class="container d-flex ps-3 text-center">
+    <% if(addressdata){%>
+   
+    
+    <% addressdata.addresses.forEach(x=>{%>
+ <div class="card ml-3 "  style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title"><%=x.userName%></h5>
+              <ul class="list-group">
+                
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Phone</span>
+                    <span><%=x.mobile%></span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between">
+                    <span>Alt Mobile</span>
+                    <span><%=x.alternativeMob  %></span>
+                  </li>
+                  
+                
+               
+               
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>Address</span>
+                  <span><%=x.address%></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>City</span>
+                  <span><%=x.city%></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>State</span>
+                  <span><%=x.state%></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>Pincode</span>
+                  <span><%=x.pincode%></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>Landmark</span>
+                  <span><%=x.landmark%></span>
+                </li>
+              
+              </ul>
+            
+           
+            </div>
+      </div>
+    <%})%>
+   <% }else{%>
+<p>Address Not Added <br>
+    <a href="/addAddress">Add New Address</a></p>
+  <% }%>
+    <div class="row justify-content-center">
+   
+        
+        
+    </div>
+  </div>
+ 
+</section>
+
+<%- include('../layouts/userlayout/footer.ejs') %>

@@ -1,0 +1,51 @@
+<%- include('../layouts/userlayout/header.ejs') %>
+
+<!-- Add your custom CSS styles here -->
+<style>
+  /* Add your custom styles for the Order History page here */
+</style>
+
+<section class="ftco-section bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-12 mt-5">
+        <div class="text-center mt-5 mb-5">
+          <h2>Order History</h2>
+        </div>
+        <div class="table-responsive ">
+          <table class="table table-striped ">
+            <thead class="bg-primary">
+              <tr>
+                <th>Date</th>
+                <th>Product Image</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orderHistory.forEach(order => { %>
+                <% order.products.forEach(product => { %>
+                  <tr>
+                    <td><%= order.date.toLocaleDateString() %></td>
+                    <td>
+                      <img src="/adminAsset/IMAGES/<%= product.productId.image[0] %>" alt="Product Image" style="width: 100px; height: 100px;">
+                    </td>
+                    <td><%= product.productId.name %></td>
+                    <td><%= product.productPrice %></td>
+                    <td><%= order.status %></td>
+                  </tr>
+                <% }); %>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-center mt-4">
+          <a href="/user/profile" class="btn btn-primary">Back to Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../layouts/userlayout/footer.ejs') %>

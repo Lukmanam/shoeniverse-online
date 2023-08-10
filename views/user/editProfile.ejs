@@ -1,0 +1,36 @@
+<%- include('../layouts/userlayout/header.ejs') %>
+
+
+<section class="ftco-section bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="text-center mb-5">
+          <img src="/userAsset/profile.png" class="rounded-circle" alt="User Avatar" style="width: 150px; height: 150px;">
+          <h2 class="mt-3"><%=userprofile.name%></h2>
+          <p class="text-muted"><%=userprofile.email%></p>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Edit Profile</h5>
+            <form action="/editprofile" method="post">
+              <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="<%=userprofile.name%>" pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$"  required>
+              </div>
+              <div class="form-group">
+                <label for="mobile">Phone</label>
+                <input type="text" class="form-control" id="mobile" name="mobile" value="<%=userprofile.mobile%>"   pattern="\d{1,10}" required>
+              </div>
+              <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../layouts/userlayout/footer.ejs') %>

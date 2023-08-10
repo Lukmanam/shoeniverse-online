@@ -7,39 +7,17 @@
                     
                 </div>
                 <div class="card mb-4">
-                    <!-- <header class="card-header">
-                        <div class="row gx-3">
-                            <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" />
-                            </div>
-                            <div class="col-lg-2 col-md-3 col-6">
-                                <select class="form-select">
-                                    <option>Status</option>
-                                    <option>Active</option>
-                                    <option>Disabled</option>
-                                    <option>Show all</option>
-                                </select>
-                            </div> -->
-                            <!-- <div class="col-lg-2 col-md-3 col-6">
-                                <select class="form-select">
-                                    <option>Show 20</option>
-                                    <option>Show 30</option>
-                                    <option>Show 40</option>
-                                </select>
-                            </div>
-                        </div>
-                    </header> -->
-                    <!-- card-header end// -->
+                    
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover" >
                                 <thead>
                                     <tr>
                                         <th>Users</th>
                                         <th>Email</th>
                                         <th>Status</th>
                                         <th> Action</th>
-                                        <!-- <th class="text-end">Action</th> -->
+                                       
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,32 +39,112 @@
                                         </td>
                                     </tr> -->
                                     <% users.forEach((users) => { %>
-                                        <tr>
+                                        <tr >
                                           <td><%= users.name %></td>
                                           <td><%= users.email %></td>
 
 
                                         
                                         <% if (users.is_blocked === 1) { %>
-                                        <td><span class="badge rounded-pill alert-danger">Blocked</span></td>
+                                        <td><span  class="badge rounded-pill alert-danger" id="block1<%= users._id %>">Blocked</span>
+                                        <span  class="badge rounded-pill alert-success" id="block2<%= users._id %>"></span></td>
                                         <% } 
                                         else { %>
-                                            <td><span class="badge rounded-pill alert-success">Active</span></td>
+                                            <td><span id="block2<%=users._id%>" class="badge rounded-pill alert-success">Unblocked</span>
+                                            <span id="block1<%=users._id%>" class="badge rounded-pill alert-danger"></span></td>
                                         <% } %>
-                                    </td>
-                                    <td> <button class="btn btn-danger">Block</button> </td>
+                                        <td>
+  <button id="prodId<%=users._id%>" class="btn btn-sm rounded font-sm mt-15 text-white <%= users.is_blocked == 0 ? 'btn-danger' : 'btn-success' %>" onclick="showConfirmation('<%= users._id %>')">
+    <%if(users.is_blocked==0){%> Block <%}else{%> Unblock <%}%>
+  </button>
+</td>
+
+ 
+
+
+
                                         </tr>
                                       <% }) %>
+                                      
+
                                    
                                 </tbody>
                             </table>
-                            <!-- table-responsive.// -->
+                            <!-- table-responsive. -->
                         </div>
                     </div>
-                    <!-- card-body end// -->
+                    <!-- card-body end -->
                 </div>
-                <!-- card end// -->
+                <!-- card end -->
                
             </section>
-            <!-- content-main end// -->
+            <!-- content-main end -->
             <%- include("../layouts/adminlayout/footer.ejs") %>
+
+
+<!-- <script>
+              
+//   const userBlock = async (userId) => {
+//     try {
+//       const userBlock = await axios.patch("/admin/blockUser", { userId });
+//       if (userBlock.data.message === true) {
+//         document.getElementById(`prodId${userId}`).textContent = 'Unblock'
+//       } else if (userBlock.data.message === false) {
+//         document.getElementById(`prodId${userId}`).textContent = 'Block'
+//       }
+//     } catch (error) {
+//       console.log(error.message);
+//     }
+//   };
+//   $(document).ready(function () {
+//     $("#myTable").DataTable();
+//   });
+</script> -->
+<script>
+  const userBlock = async (userId, isBlocked) => {
+    try {
+      const userBlock = await axios.patch("/admin/blockUser", { userId, isBlocked });
+
+      if (userBlock.data.message === true) {
+        console.log(userBlock.data.message);
+         const btn = document.getElementById(`prodId${userId}`)
+        btn.textContent = 'Unblock';
+        btn.style.backgroundColor = '#00B517'
+        btn.style.color = '#fff'
+        document.getElementById(`block1${userId}`).innerText = 'Blocked';
+        document.getElementById(`block1${userId}`).style.color = 'red'; // Set status color to red for blocked
+        document.getElementById(`block2${userId}`).innerText = ''; // Clear the content of the 'Unblocked' span
+      } else if (userBlock.data.message === false) {
+        console.log(userBlock.data.message);
+
+        const btn = document.getElementById(`prodId${userId}`)
+        btn.textContent = 'Block';
+        btn.style.backgroundColor = '#cf0000'
+        btn.style.color = '#fff'
+        document.getElementById(`block2${userId}`).innerText = 'Unblocked';
+        document.getElementById(`block2${userId}`).style.color = 'green'; // Set status color to green for unblocked
+        document.getElementById(`block1${userId}`).innerText = ''; // Clear the content of the 'Blocked' span
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const showConfirmation = (userId, isBlocked) => {
+    const action = isBlocked ? 'unblock' : 'block';
+    const confirmationMessage = `Are you sure ?`;
+
+    if (window.confirm(confirmationMessage)) {
+      userBlock(userId, isBlocked);
+    }
+  };
+</script>
+
+</script>
+
+
+
+
+
+
+

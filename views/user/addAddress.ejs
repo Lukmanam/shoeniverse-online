@@ -1,0 +1,162 @@
+
+
+<%- include('../layouts/userlayout/header.ejs') %>
+
+<section class="ftco-section bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="text-center mb-5">
+          <h2 class="mt-3">Add New Address</h2>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <form action="/addAddress" method="POST">
+                <div class="form-group">
+                    <label for="userName">Name</label>
+                    <input type="text" id="userName" name="userName" class="form-control" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="mobile">Mobile</label>
+                    <input type="text" id="mobile" name="mobile" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="alternativeMob">Alt Mobile</label>
+                    <input type="text" id="alternativeMob" name="alternativeMob" class="form-control">
+                  </div>
+
+              <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="landmark">Landmark</label>
+                <input type="text" id="landmark" name="landmark" class="form-control">
+              </div>
+             
+              <div class="form-group">
+                <label for="pincode">Pincode</label>
+                <input type="text" id="pincode" name="pincode" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" id="state" name="state" class="form-control" required>
+              </div >
+              <button type="submit" class="btn btn-primary  class=text-center">Add Address</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- 
+
+<h3 class="mb-4 billing-heading text-center">Billing Details</h3>
+<div class="row align-items-end">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="firstname">Firt Name</label>
+      <input type="text" class="form-control" placeholder="">
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="lastname">Last Name</label>
+      <input type="text" class="form-control" placeholder="">
+    </div>
+  </div>
+  <div class="w-100"></div>
+  <div class="col-md-12">
+    <div class="form-group">
+      <label for="country">State / Country</label>
+      <div class="select-wrap">
+        <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+        <select name="" id="" class="form-control">
+          <option value="">France</option>
+          <option value="">Italy</option>
+          <option value="">Philippines</option>
+          <option value="">South Korea</option>
+          <option value="">Hongkong</option>
+          <option value="">Japan</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="w-100"></div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="streetaddress">Street Address</label>
+      <input type="text" class="form-control" placeholder="House number and street name">
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Appartment, suite, unit etc: (optional)">
+    </div>
+  </div>
+  <div class="w-100"></div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="towncity">Town / City</label>
+      <input type="text" class="form-control" placeholder="">
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="postcodezip">Postcode / ZIP *</label>
+      <input type="text" class="form-control" placeholder="">
+    </div>
+  </div>
+  <div class="w-100"></div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input type="text" class="form-control" placeholder="">
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label for="emailaddress">Email Address</label>
+      <input type="text" class="form-control" placeholder="">
+    </div>
+  </div>
+  <div class="w-100"></div>
+  <div class="col-md-12">
+    <div class="form-group mt-4">
+      <div class="radio">
+        <label class="mr-3"><input type="radio" name="optradio"> Create an Account? </label>
+        <label><input type="radio" name="optradio"> Ship to different address</label>
+      </div>
+    </div>
+  </div>
+</div>
+</form> END -->
+
+ 
+
+<script>
+    function validateForm() {
+        var userName = document.getElementById("username").value.trim();
+        var mobile = document.getElementById("mobile").value.trim();
+        var address = document.getElementById("address").value.trim();
+        var city = document.getElementById("city").value.trim();
+        var state = document.getElementById("state").value.trim();
+        var pincode = document.getElementById("pincode").value.trim();
+
+        // Validate that required fields are not empty
+        if (userName === '' || mobile === '' || address === '' || city === '' || state === '' || pincode === '') {
+            toastr.error("Please fill in all required fields.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+<%- include('../layouts/userlayout/footer.ejs') %>
