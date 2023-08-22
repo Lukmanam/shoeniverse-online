@@ -1,0 +1,100 @@
+<%- include('../layouts/userlayout/header.ejs') %>
+
+  <!-- Add your custom CSS styles here -->
+  <style>
+    /* Add your custom styles for the Order Details page here */
+    .invoice-container {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .invoice-title {
+      font-size: 24px;
+    }
+
+    .invoice-details {
+      font-size: 16px;
+    }
+  </style>
+
+  <section class="ftco-section bg-light">
+    <div class="container">
+      <div class="text-right mt-4 mr-5 text-white">
+        <a href="/showOrders"> <button class=" btn-dark btn-sm mb-4">Back</button></a>
+      </div>
+      <div class="heading text-center">
+        <h2 class="mt-3 mb-5">Order Details</h2>
+      </div>
+     
+      <div class="invoice-container">
+        <div class="invoice-header">
+          <div class="invoice-details ml-3">
+            <p><strong>User:</strong>
+              <%= orderData.userName %>
+            </p>
+            <p><strong>Address:</strong>
+              <%= orderData.deliveryAddress %>
+            </p>
+
+          </div>
+
+          <div class="invoice-title mr-5">
+            <p class="text-brand"><strong>Status:</strong>
+              <%= orderData.status %>
+            </p>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead class="bg-primary">
+              <tr>
+                <th>Product Image</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <% orderData.products.forEach(product=> { %>
+                <tr>
+                  <td>
+                    <img src="/adminAsset/IMAGES/<%= product.productId.image[0] %>" alt="Product Image"
+                      style="width: 100px; height: 100px;">
+                  </td>
+                  <td>
+                    <%= product.productId.name %>
+                  </td>
+                  <td>₹<%= product.productPrice %>
+                  </td>
+                  <td>
+                    <%= product.count %>
+                  </td>
+
+                </tr>
+                <% }); %>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-right">
+          <p class="mr-5"><strong>Total Price:</strong> ₹<%= orderData.totalAmount %>/-</p>
+
+        </div>
+      </div>
+      <div class="text-center mt-4">
+        <a href="/showOrders" class="btn btn-primary">Back to Order History</a>
+      </div>
+    </div>
+  </section>
+
+  <%- include('../layouts/userlayout/footer.ejs') %>

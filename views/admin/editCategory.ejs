@@ -1,33 +1,57 @@
 <%- include('../layouts/adminlayout/header.ejs') %>
-        <main class="main-wrap">
-           
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Categories</h2>
-                        <p>Edit category</p>
-                    </div>
-                  
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <form method="post" action="/admin/editCategory?name=<%= catData.name %>">
-                                    <div class="mb-4">
-                                        <label for="productName" class="form-label">Category Name</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="productName" name="name" value="<%= catData.name %>" required />
-                                    </div>
-                                   
-                                  
-                                    <div class="mb-4">
-                                        <label for="description" class="form-label">Description :</label>
-                                        <input placeholder="Type here" class="form-control" id="description" name="description" value="<%= catData.description %>">
-                                    
-                                       </div>
-                                       
-                                    <div class="button">
-                                        <button class="btn btn-primary" type="submit" value="Save">Confirm</button>
-                                    </div>
-                                    
-                                </form>
+<main class="main-wrap">
+  <section class="content-main">
+    <div class="content-header">
+      <div>
+        <h2 class="content-title card-title">Categories</h2>
+        <p>Edit category</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3">
+            <form
+              method="post"
+              action="/admin/editCategory?name=<%= catData.name %>"
+            >
+              <div class="mb-4">
+                <label for="productName" class="form-label"
+                  >Category Name</label
+                >
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  class="form-control"
+                  id="productName"
+                  name="name"
+                  value="<%= catData.name %>"
+                  required
+                />
+              </div>
+
+              <div class="mb-4">
+                <label for="description" class="form-label"
+                  >Description :</label
+                >
+                <input
+                  placeholder="Type here"
+                  class="form-control"
+                  id="description"
+                  name="description"
+                  value="<%= catData.description %>"
+                />
+              </div>
+
+              <div class="button">
+                <button class="btn btn-primary" type="submit" value="Save">
+                  Confirm
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

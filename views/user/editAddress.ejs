@@ -1,111 +1,122 @@
-
 <%- include('../layouts/userlayout/header.ejs') %>
 
 
-<section class="ftco-section bg-light">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6">
-        <div class="text-center mb-5">
-          <h2 class="mt-3">Edit Address</h2>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <form action="/editAddress?id=<%=aData._id %>" method="POST">
-                <div class="form-group">
-                    <label for="userName">Name</label>
-                    <input type="text" id="userName" name="userName" class="form-control" value="<%= aData.userName%>" required>
-                  </div>
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="text-center mb-5">
+                        <h2 class="mt-3">Edit Address</h2>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="/editAddress?id=<%=aData._id %>" method="POST">
+                                <div class="form-group">
+                                    <label for="userName">Name</label>
+                                    <input type="text" id="userName" name="userName" class="form-control"
+                                        value="<%= aData.userName%>" required>
+                                </div>
 
-                  <div class="form-group">
-                    <label for="mobile">Mobile</label>
-                    <input type="text" id="mobile" name="mobile" class="form-control" required>
-                  </div>
-                  <div class="form-g<%- include('../partials/userPartials/header.ejs') %>
+                                <div class="form-group">
+                                    <label for="mobile">Mobile</label>
+                                    <input type="text" id="mobile" name="mobile" class="form-control" required>
+                                </div>
+                                <div class="form-g<%- include('../partials/userPartials/header.ejs') %>
 
                     <!-- BREADCRUMB AREA START -->
-                    <div class="ltn__breadcrumb-area text-left bg-overlay-white-30 bg-image ">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="ltn__breadcrumb-inner">
-                                        <h1 class="page-title"> Add Address</h1>
-                                        <div class="ltn__breadcrumb-list">
-                                            <ul>
-                                                <li><a href="/"><span class="ltn__secondary-color"><i class="fas fa-home"></i></span>
-                                                        Home</a></li>
-                                                <!-- <li><a href="/addAddress">Edit Address</a></li> -->
-                                            </ul>
+                    <div class=" ltn__breadcrumb-area text-left bg-overlay-white-30 bg-image ">
+                        <div class=" container">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="ltn__breadcrumb-inner">
+                                                <h1 class="page-title"> Add Address</h1>
+                                                <div class="ltn__breadcrumb-list">
+                                                    <ul>
+                                                        <li><a href="/"><span class="ltn__secondary-color"><i
+                                                                        class="fas fa-home"></i></span>
+                                                                Home</a></li>
+                                                        <!-- <li><a href="/addAddress">Edit Address</a></li> -->
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <!-- BREADCRUMB AREA END -->
+
+                        <!-- Register AREA START-->
+                        <div class="ltn__login-area pb-110">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="section-title-area text-center">
+                                            <h1 class="section-title">Edit Your Address</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 offset-lg-3">
+                                        <div class="account-login-inner">
+                                            <form method="post" action="/editAddress?id=<%=address._id %>"
+                                                class="ltn__form-box contact-form-box" onsubmit="return validateForm()">
+                                                <label for="username"> User Name:</label>
+                                                <input type="text" name="userName" placeholder="Username" id="username"
+                                                    value="<%=address.userName%>">
+                                                <label for="mobile">Mobile:</label>
+                                                <input type="text" name="mobile" placeholder="Mobile Number" id="mobile"
+                                                    value="<%=address.mobile%>">
+                                                <label for="altMobile"> Alternative Mobile:</label>
+                                                <input type="text" name="altMobile"
+                                                    placeholder="Alternative Mobile Number(optional)"
+                                                    value="<%=address.alternativeMob%>" id="altMobile">
+                                                <label for="address"> Address:</label>
+                                                <textarea name="address" placeholder="Address"
+                                                    id="address"><%=address.address%></textarea>
+                                                <label for="city"> City:</label>
+                                                <input type="text" name="city" placeholder="City" id="city"
+                                                    value="<%=address.city%>">
+                                                <label for="state"> State:</label>
+                                                <input type="text" name="state" placeholder="State" id="state"
+                                                    value="<%=address.state%>">
+                                                <label for="pincode"> Pincode:</label>
+                                                <input type="text" name="pincode" placeholder="Pincode" id="pincode"
+                                                    value="<%=address.pincode%>">
+                                                <label for="landmark"> Landmark:</label>
+                                                <input type="text" name="landmark" placeholder="Landmark (optional)"
+                                                    id="landmark" value="<%=address.landmark%>">
+                                                <div class="btn-wrapper">
+                                                    <button class="theme-btn-1 btn reverse-color btn-block"
+                                                        type="submit">EDIT
+                                                        ADDRESS</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- BREADCRUMB AREA END -->
-                
-                    <!-- Register AREA START-->
-                    <div class="ltn__login-area pb-110">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="section-title-area text-center">
-                                        <h1 class="section-title">Edit Your Address</h1>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6 offset-lg-3">
-                                    <div class="account-login-inner">
-                                        <form method="post" action="/editAddress?id=<%=address._id %>" class="ltn__form-box contact-form-box" onsubmit="return validateForm()">
-                                            <label for="username"> User Name:</label>
-                                            <input type="text" name="userName" placeholder="Username" id="username" value="<%=address.userName%>" >
-                                            <label for="mobile">Mobile:</label>
-                                            <input type="text" name="mobile" placeholder="Mobile Number" id="mobile" value="<%=address.mobile%>">
-                                            <label for="altMobile"> Alternative Mobile:</label>
-                                            <input type="text" name="altMobile" placeholder="Alternative Mobile Number(optional)" value="<%=address.alternativeMob%>"
-                                                id="altMobile">
-                                            <label for="address"> Address:</label>
-                                            <textarea name="address" placeholder="Address" id="address" ><%=address.address%></textarea>
-                                            <label for="city"> City:</label>
-                                            <input type="text" name="city" placeholder="City" id="city" value="<%=address.city%>">
-                                            <label for="state"> State:</label>
-                                            <input type="text" name="state" placeholder="State" id="state" value="<%=address.state%>">
-                                            <label for="pincode"> Pincode:</label>
-                                            <input type="text" name="pincode" placeholder="Pincode" id="pincode" value="<%=address.pincode%>">
-                                            <label for="landmark"> Landmark:</label>
-                                            <input type="text" name="landmark" placeholder="Landmark (optional)" id="landmark" value="<%=address.landmark%>">
-                                            <div class="btn-wrapper">
-                                                <button class="theme-btn-1 btn reverse-color btn-block" type="submit">EDIT
-                                                    ADDRESS</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- REGISTER AREA END -->
-                
-                    <script>
-                        function validateForm() {
-                            var userName = document.getElementById("username").value.trim();
-                            var mobile = document.getElementById("mobile").value.trim();
-                            var address = document.getElementById("address").value.trim();
-                            var city = document.getElementById("city").value.trim();
-                            var state = document.getElementById("state").value.trim();
-                            var pincode = document.getElementById("pincode").value.trim();
-                
-                            // Validate that required fields are not empty
-                            if (userName === '' || mobile === '' || address === '' || city === '' || state === '' || pincode === '') {
-                                toastr.error("Please fill in all required fields.");
-                                return false;
+                        <!-- REGISTER AREA END -->
+
+                        <script>
+                            function validateForm() {
+                                var userName = document.getElementById("username").value.trim();
+                                var mobile = document.getElementById("mobile").value.trim();
+                                var address = document.getElementById("address").value.trim();
+                                var city = document.getElementById("city").value.trim();
+                                var state = document.getElementById("state").value.trim();
+                                var pincode = document.getElementById("pincode").value.trim();
+
+                                // Validate that required fields are not empty
+                                if (userName === '' || mobile === '' || address === '' || city === '' || state === '' || pincode === '') {
+                                    toastr.error("Please fill in all required fields.");
+                                    return false;
+                                }
+
+                                return true;
                             }
-                
-                            return true;
-                        }
-                    </script>
+                        </script>
 
 
 
-<%- include('../layouts/userlayout/footer.ejs') %>
+                        <%- include('../layouts/userlayout/footer.ejs') %>

@@ -1,45 +1,59 @@
 <%- include('../layouts/adminlayout/header.ejs') %>
-        <main class="main-wrap">
-           
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Categories</h2>
-                        <p>Add category</p>
-                    </div>
-                  
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <form method="post" action="/admin/addCategory">
-                                    <div class="mb-4">
-                                        <label for="category Name" class="form-label">Category Name</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="categoryName" name="name" required />
-                                    </div>
-                                    
-                                  
-                                    <div class="mb-4">
-                                        <label for="description" class="form-label">Description :</label>
-                                        <textarea placeholder="Type here" class="form-control" id="description" name="description" rows="3" ></textarea>
-                                    </div>
-                                    <%=message  %>
-                                  
-                                        <button class="btn " type="submit" value="Save" style="background-color: #3bb77e;">Add</button>
-                                    
-                                    
-                                </form>
-                            </div>
-                        
-                                        
-                        </div>
-                    </div>
-                    </div>
-            </section>
-         </main>
-         <%- include("../layouts/adminlayout/footer.ejs") %> 
+<main class="main-wrap">
+  <section class="content-main">
+    <div class="content-header">
+      <div>
+        <h2 class="content-title card-title">Categories</h2>
+        <p>Add category</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3">
+            <form method="post" action="/admin/addCategory">
+              <div class="mb-4">
+                <label for="category Name" class="form-label"
+                  >Category Name</label
+                >
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  class="form-control"
+                  id="categoryName"
+                  name="name"
+                  pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$"
+                  required
+                />
+              </div>
 
+              <div class="mb-4">
+                <label for="description" class="form-label"
+                  >Description :</label
+                >
+                <textarea
+                  placeholder="Type here"
+                  class="form-control"
+                  id="description"
+                  name="description"
+                  rows="3"
+                ></textarea>
+              </div>
+              <%=message %>
 
-         
-                    
+              <button
+                class="btn"
+                type="submit"
+                value="Save"
+                style="background-color: #3bb77e"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<%- include("../layouts/adminlayout/footer.ejs") %>

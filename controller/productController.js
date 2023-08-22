@@ -2,14 +2,14 @@ const productDB = require("../model/productModel");
 const UserDB = require("../model/usermodel");
 const categoryDB = require("../model/categorymodel");
 const productController = require("../controller/productController");
-const fs=require("fs");
-const path=require('path')
+const fs = require("fs");
+const path = require("path");
 
 // Load Product List //////////////(ADMIN SIDE)
 
 // const loadproductlist = async (req, res) => {
 //   try {
-    
+
 //     const product = await productDB.find({});
 //     res.render("productList", { product });
 //   } catch (error) {
@@ -26,13 +26,12 @@ const loadproductlist = async (req, res) => {
       query = { $text: { $search: searchTerm } };
     }
 
-    const product = await productDB.find(query);
+    const product = await productDB.find(query).populate("category");
     res.render("productList", { product, searchTerm });
   } catch (error) {
     console.log(error.message);
   }
 };
-
 
 //LOAD ADD PRODUCT//////////////////////////
 const loadaddProduct = async (req, res) => {
@@ -57,6 +56,7 @@ const addProduct = async (req, res) => {
     }
 
     const { name, category, price, quantity, description } = req.body;
+    console.log(category);
     const productData = new productDB({
       name: name,
       category: category,
@@ -136,100 +136,94 @@ const editProduct = async (req, res) => {
 //         res.render("editProduct",{product,category});
 //     } catch (error) {
 //         console.log(error.message);
-        
+
 //     }
 // }
 const loadeditProduct = async (req, res) => {
-    try {
-
-      const id = req.query.product;
-      const product = await productDB.findOne({ _id: id });
-      const category = await categoryDB.find({});
-      res.render("editProduct", { product, category });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-const unlistProduct=async(req,res)=>
-{
   try {
-    const {prodName}=req.body
-    const unlistProduct=await productDB.findOne({name:prodName})
-    console.log(unlistProduct);
-
-    if(unlistProduct.blocked==false)
-    {
-      console.log("block false");
-      await productDB.updateOne({name:prodName},{$set:{blocked:true}});
-      res.status(201).json({ message: true }); // Use true instead of 1
-
-    }
-    else
-    {
-      console.log("block true");
-      await productDB.updateOne({name:prodName},{$set:{blocked:false}})
-      res.status(201).json({ message: false });
-    }
-    
+    const id = req.query.product;
+    const product = await productDB.findOne({ _id: id });
+    const category = await categoryDB.find({});
+    res.render("editProduct", { product, category });
   } catch (error) {
-    console.log(error.message);
-   res
-    .status(500)
-      .json({ message: "Error occurred while processing the request." });
-  }
-}
-const loadProductDetail = async (req, res) => {
-  try {
-    const user=req.session.user_id
-    const id = req.query.id;
-    const product = await productDB.findById({ _id: id });
-    console.log(product,"OKKK");
-      res.render("productDetails", { product,user })
-    }
-
-    
-  catch (error) {
     console.log(error.message);
   }
 };
 
-
-const deleteImage = async(req,res)=>{
+const unlistProduct = async (req, res) => {
   try {
-    const productId = req.query.id
-    const fileName = req.query.fileName
-    if(productId && fileName){
+    const { prodName } = req.body;
+    const unlistProduct = await productDB.findOne({ name: prodName });
+    console.log(unlistProduct);
+
+    if (unlistProduct.blocked == false) {
+      console.log("block false");
+      await productDB.updateOne(
+        { name: prodName },
+        { $set: { blocked: true } }
+      );
+      res.status(201).json({ message: true }); // Use true instead of 1
+    } else {
+      console.log("block true");
+      await productDB.updateOne(
+        { name: prodName },
+        { $set: { blocked: false } }
+      );
+      res.status(201).json({ message: false });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res
+      .status(500)
+      .json({ message: "Error occurred while processing the request." });
+  }
+};
+const loadProductDetail = async (req, res) => {
+  try {
+    const user = req.session.user_id;
+    const id = req.query.id;
+    const product = await productDB.findById({ _id: id });
+    console.log(product, "OKKK");
+    res.render("productDetails", { product, user });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const deleteImage = async (req, res) => {
+  try {
+    const productId = req.query.id;
+    const fileName = req.query.fileName;
+    if (productId && fileName) {
       // delete from database
       const updatedProd = await productDB.findByIdAndUpdate(
         productId,
         { $pull: { images: fileName } },
-        { new: true } 
-        );
-        if(!updatedProd){
-          throw new Error('Product not found');
-        }
-        
-        console.log("hi",productId);
-        // Delete the image file from storage 
-        
-        await fs.unlink(path.join(__dirname, "../public/adminAsset/IMAGES", req.query.fileName), (error) => {
+        { new: true }
+      );
+      if (!updatedProd) {
+        throw new Error("Product not found");
+      }
+
+      console.log("hi", productId);
+      // Delete the image file from storage
+
+      await fs.unlink(
+        path.join(__dirname, "../public/adminAsset/IMAGES", req.query.fileName),
+        (error) => {
           if (error) {
             console.log(error.message);
           }
-        });
-        res.redirect(`/admin/editProduct?product=${productId}`);
-      } else {
-          throw new Error('Invalid request parameters');
-      }
-      
-
+        }
+      );
+      res.redirect(`/admin/editProduct?product=${productId}`);
+    } else {
+      throw new Error("Invalid request parameters");
+    }
   } catch (error) {
-      console.log(error.message);
+    console.log(error.message);
   }
-}
-
-
+};
 
 module.exports = {
   loadproductlist,
@@ -239,5 +233,5 @@ module.exports = {
   loadeditProduct,
   unlistProduct,
   loadProductDetail,
-  deleteImage
+  deleteImage,
 };

@@ -22,9 +22,11 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Description</th>
-                                           <th><th><th></th></th></th>
-                                            
-                                        
+                                            <th>
+                                            <th>
+                                            <th></th>
+                                            </th>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -78,31 +80,14 @@
         <!-- content-main end// -->
         <%- include("../layouts/adminlayout/footer.ejs") %>
 
-            // <footer class="main-footer font-xs">
-                // <div class="row pb-30 pt-15">
 
-                    // </footer>
-            //
     </main>
-    //
     <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-    //
     <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-    //
     <script src="assets/js/vendors/select2.min.js"></script>
-    //
-    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-    //
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script> 
     <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-    // <!-- Main Script -->
-    //
     <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    // </body>
-
-    //
-
-
-
     <script>
         const Unlist = async (catgname) => {
             try {
@@ -114,14 +99,13 @@
                     document.getElementById(`block2${catgname}`).innerText = '';
                 }
                 else if (Unlist.data.message === false) {
-        document.getElementById(`catid${catgname}`).textContent = 'Unlist';
-        document.getElementById(`block2${catgname}`).innerText = 'Listed';
-        document.getElementById(`block1${catgname}`).innerText = ''; // Clear the content of the 'Blocked' span
+                    document.getElementById(`catid${catgname}`).textContent = 'Unlist';
+                    document.getElementById(`block2${catgname}`).innerText = 'Listed';
+                    document.getElementById(`block1${catgname}`).innerText = ''; // Clear the content of the 'Blocked' span
 
                 }
             } catch (error) {
                 console.log(error.message);
             }
         }
-
     </script>

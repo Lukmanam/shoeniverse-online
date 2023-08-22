@@ -1,144 +1,141 @@
 <%- include('../layouts/userlayout/header.ejs') %>
 
-	<link
-  rel="stylesheet"
-  href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
 
-    <div class="hero-wrap hero-bread" style="background-image: url('images/bg_6.jpg');">
-      <div class="container">
-        <div class="row no-gutters slider-text align-items-center justify-content-center">
-          <div class="col-md-9 ftco-animate text-center">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="/">Home</a></span> <span>Cart</span></p>
-            <h1 class="mb-0 bread">My Cart</h1>
-          </div>
-        </div>
-      </div>
-    </div>
+	<div class="hero-wrap hero-bread" style="background-image: url('images/bg_6.jpg');">
+		<div class="container">
+			<div class="row no-gutters slider-text align-items-center justify-content-center">
+				<div class="col-md-9 ftco-animate text-center">
+					<p class="breadcrumbs"><span class="mr-2"><a href="/">Home</a></span> <span>Cart</span></p>
+					<h1 class="mb-0 bread">My Cart</h1>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <section class="ftco-section ftco-cart">
-			<div class="container">
-				<div class="row">
-    			<div class="col-md-12 ftco-animate">
-    				<div class="cart-list">
-	    				<table class="table">
-						    <thead class="thead-primary">
-						      <tr class="text-center">
-						        <th>&nbsp;</th>
-						        <th>&nbsp;</th>
-						        <th>Product</th>
-								<th>Quantity</th>
-						        <th>Price</th>
-						        
-						      
-						      </tr>
-						    </thead>
-						    <tbody>
+	<section class="ftco-section ftco-cart">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 ftco-animate">
+					<div class="cart-list">
+						<table class="table">
+							<thead class="thead-primary">
+								<tr class="text-center">
+									<th>&nbsp;</th>
+									<th>&nbsp;</th>
+									<th>Product</th>
+									<th>Quantity</th>
+									<th>Price</th>
+								</tr>
+							</thead>
+							<tbody>
 								<% if(cartData) {%>
 									<% products.forEach(x=>{%>
-						      <tr class="text-center">
-						        <td class="product-remove"><a href="/removeFromCart?id=<%=x.productId._id %>">Remove</a></td>
-						        
-						        <td class="image-prod"><div class="img" style="background-image:url(/adminAsset/IMAGES/<%=x.productId.image%>);"></div></td>
-						        
-						        <td class="product-name">
-						        	<h3><%= x.productId.name%></h3>
-						        	
-						        </td>
-						        
-						        
-						        
+										<tr class="text-center">
+											<td class="product-remove"><a
+													href="/removeFromCart?id=<%=x.productId._id %>">Remove</a></td>
 
-								<td>
-									<% if (x.count <=1) { %>
-										<span id="quantity" name="count" class="quantity">
-											<%= x.count %>
-										</span>
-										<button type="button" class="quantity-right-plus btn"
-											onclick="changeQuantity('<%= userId %>','<%= x.productId._id %>', 1)">+</button>
-										<% } else { %>
-											<button type="button" class="quantity-left-minus btn"
-												onclick="changeQuantity('<%= userId %>','<%= x.productId._id %>', -1)">-</button>
-											<span id="quantity" name="count" class="quantity">
-												<%= x.count %>
-											</span>
-											<button type="button" class="quantity-right-plus btn"
-												onclick="changeQuantity('<%= userId %>','<%= x.productId._id %>', 1)">+</button>
-											<% } %>
+											<td class="image-prod">
+												<div class="img"
+													style="background-image:url(/adminAsset/IMAGES/<%=x.productId.image[0]%>);">
+												</div>
+											</td>
 
-								</td>
-<td class="price"><%= x.productPrice %></td>
+											<td class="product-name">
+												<h3>
+													<%= x.productId.name%>
+												</h3>
 
-								  
-					          
-						      </tr><!-- END TR--><%})%>
-							  <% }%>
-						    </tbody>
-						  </table>
-					  </div>
-    			</div>
-    		</div>
-    		<div class="row justify-content-start">
-    			<div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">
-    				<div class="cart-total mb-3">
-    					<h3>Cart Totals</h3>
-    					<p class="d-flex">
-    						<span>Subtotal</span>
-    						<span>₹<%= Total %></span>
-    					</p>
-    					<p class="d-flex">
-    						<span>Delivery</span>
-    						<span>₹0.00</span>
-    					</p>
-    					<p class="d-flex">
-    						<span>Discount</span>
-    						<span>₹ 0.00</span>
-    					</p>
-    					<hr>
-    					<p class="d-flex total-price">
-    						<span>Total</span>
-    						<span>₹<%= Total %></span>
-    					</p>
-    				</div>
-    				<p class="text-center"><a href="/checkout" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
-    			</div>
-    		</div>
+											</td>
+											<td>
+												<% if (x.count <=1) { %>
+													<span id="quantity" name="count" class="quantity">
+														<%= x.count %>
+													</span>
+													<button type="button" class="quantity-right-plus btn"
+														onclick="changeQuantity('<%= userId %>','<%= x.productId._id %>', 1)">+</button>
+													<% } else { %>
+														<button type="button" class="quantity-left-minus btn"
+															onclick="changeQuantity('<%= userId %>','<%= x.productId._id %>', -1)">-</button>
+														<span id="quantity" name="count" class="quantity">
+															<%= x.count %>
+														</span>
+														<button type="button" class="quantity-right-plus btn"
+															onclick="changeQuantity('<%= userId %>','<%= x.productId._id %>', 1)">+</button>
+														<% } %>
+
+											</td>
+											<td class="price">
+												<%= x.productPrice %>
+											</td>
+
+
+
+										</tr><!-- END TR-->
+										<%})%>
+											<% }%>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
-		</section>
-		
+			<div class="row justify-content-start">
+				<div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">
+					<div class="cart-total mb-3">
+						<h3>Cart Totals</h3>
+						<p class="d-flex">
+							<span>Subtotal</span>
+							<span>₹<%= Total %></span>
+						</p>
+						<p class="d-flex">
+							<span>Delivery</span>
+							<span>₹0.00</span>
+						</p>
+						<p class="d-flex">
+							<span>Discount</span>
+							<span>₹ 0.00</span>
+						</p>
+						<hr>
+						<p class="d-flex total-price">
+							<span>Total</span>
+							<span>₹<%= Total %></span>
+						</p>
+					</div>
+					<p class="text-center"><a href="/checkout" class="btn btn-primary py-3 px-4">Proceed to Checkout</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
 
-		<%- include('../layouts/userlayout/footer.ejs') %>
 
+	<%- include('../layouts/userlayout/footer.ejs') %>
+		<script>
+			function changeQuantity(userId, proId, count) {
+				$.ajax({
+					url: '/changeProductQuantity',
+					data: {
+						user: userId,
+						product: proId,
+						count: count
+					},
+					method: 'post',
+					success: (response) => {
 
+					}
+				}).done((data) => {
+					if (data.success) {
+						window.location.reload();
 
- <script>
-        function changeQuantity(userId,proId,count){
-            $.ajax({
-                url :'/changeProductQuantity',
-                data :{
-                    user :userId,
-                    product :proId,
-                    count :count 
-                },
-                method :'post',
-                success:(response)=>{
-
-                }
-            }).done((data)=>{
-                if(data.success){
-                    window.location.reload();
-
-                } else if(data.check){
-                    Swal.fire({
-                        icon :'error',
-                        title :'Oops..',
-                        text :'Out of Stockes!!'
-                    })
-                }
-            })
-        }
-    </script>
-
-    
-  </body>
-</html>
+					} else if (data.check) {
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops..',
+							text: 'Out of Stockes!!'
+						})
+					}
+				})
+			}
+		</script>
+		</body>
+		</html>

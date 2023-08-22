@@ -1,0 +1,54 @@
+<%- include("../layouts/adminlayout/header.ejs") %>
+
+    <body>
+        <main class="main-wrap">
+            <section class="content-main">
+                <div class="content-header">
+                    <h2 class="content-title card-title">Add Coupon</h2>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form action="/admin/editCoupon?id=<%= coupon._id%>" method="POST">
+                            <div class="mb-3">
+                                <label for="couponName" class="form-label">Coupon Name</label>
+                                <input type="text" class="form-control" id="couponName" name="couponName"
+                                    value="<%= coupon.couponName %>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="couponType" class="form-label">Coupon Type</label>
+                                <select class="form-select" id="couponType" name="discountType"
+                                    value="<%= coupon.discountType %>" required>
+                                    <option value="percentage">Percentage</option>
+                                    <option value="fixed">Fixed Amount</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="discountAmount" class="form-label">Discount Amount</label>
+                                <input type="number" class="form-control" id="discountAmount" name="discountAmount"
+                                    value="<%= coupon.discountAmount %>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="minimumCartAmount" class="form-label">Minimum Cart Amount</label>
+                                <input type="number" class="form-control" id="minimumCartAmount" name="minCartAmount"
+                                    value="<%= coupon.minCartAmount %>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="expired" class="form-label">Expire Date</label>
+                                <input type="date" class="form-control" id="expired" name="expired"
+                                    value="<%= coupon.expired ? coupon.expired.toISOString().substr(0, 10) : '' %>"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="expired" class="form-label">Max Discount Amount</label>
+                                <input type="number" class="form-control" id="maxDiscAmount" name="maxDiscAmount"
+                                    value="<%= coupon.minCartAmount%>" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Edit & Save Coupon</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+
+    <%- include("../layouts/adminlayout/footer.ejs") %>

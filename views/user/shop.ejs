@@ -28,29 +28,30 @@
 						  </form>
 						</div> -->
 						<div class="widget ltn__search-widget">
-                            <h4 class="ltn__widget-title ltn__widget-title-border">Search Products</h4>
-                            <form action="/shop" method="get">
-                                <input type="text" class="form-control" name="search" placeholder="Search your Products...">
-								
-                                <button class="btn btn-primary" type="submit">SUBMIT</button>
-                            </form>
-                        </div>
-					  </div>
-					  <br>
+							<h4 class="ltn__widget-title ltn__widget-title-border">Search Products</h4>
+							<form action="/shop" method="get" class="d-flex ">
+								<input type="text" class="form-control col-md-6" name="search"
+									placeholder="Search your Products...">
+								<button class="btn btn-primary ml-2" type="submit">Search</button>
+							</form>
+						</div>
+					</div>
+					<br>
 					<div class="row">
 						<% product.forEach(function(product) {%>
 							<div class="col-sm-12 col-md-12 col-lg-4 ftco-animate d-flex">
 								<div class="product d-flex flex-column">
-									<a href="#" class="img-prod"><img class="img-fluid"
-											src="/adminAsset/IMAGES/<%= product.image[0] %>" alt="Colorlib Template">
+									<a href="/productDetails?id=<%= product._id %>" class="img-prod"><img
+											class="img-fluid" src="/adminAsset/IMAGES/<%= product.image[0] %>"
+											alt="Colorlib Template">
 										<!-- <span class="status">50% Off</span> -->
 										<div class="overlay"></div>
 									</a>
-									<div class="text py-3 pb-4 px-3 product" >
+									<div class="text py-3 pb-4 px-3 product">
 										<div class="d-flex">
 											<div class="cat">
 												<span>
-													<%= product.category %>
+													<%= product.category.id.name %>
 												</span>
 											</div>
 											<div class="rating">
@@ -63,15 +64,15 @@
 												</p>
 											</div>
 										</div>
-										<h3 class="product-name" ><a href="/productDetails?id=<%= product._id %>">
+										<h3 class="product-name"><a href="/productDetails?id=<%= product._id %>">
 												<%= product.name %>
 											</a></h3>
 										<div class="pricing">
 											<p class="price"><span>₹<%= product.price %></span></p>
 										</div>
 										<p class="bottom-area d-flex px-3">
-											<a href="/add" class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i
-														class="ion-ios-add ml-1"></i></span></a>
+											<a href="/add" class="add-to-cart text-center py-2 mr-1"><span>Add to cart
+													<i class="ion-ios-add ml-1"></i></span></a>
 											<a href="#" class="buy-now text-center py-2">Buy now<span><i
 														class="ion-ios-cart ml-1"></i></span></a>
 										</p>
@@ -79,7 +80,7 @@
 								</div>
 							</div>
 							<%}) %>
-							<!-- <div class="row mt-5">
+								<!-- <div class="row mt-5">
 								<div class="col text-center">
 								  <div class="block-27">
 									<ul>
@@ -94,33 +95,39 @@
 								  </div>
 								</div>
 							  </div> -->
-							   <div class="ltn__pagination-area text-center">
-                        <div class="ltn__pagination">
-                            <ul>
-								
-                                <% for(i=0;i<totalPage;i++){ %>
-                                    <% if(i+1 == page) { %>
-                                        <!-- <li><a href="#" class="active"><i class="fas fa-angle-double-left"></i></a></li> -->
 
-                                        <li><a href="/shop?page=<%= i+1 %>&value=<%= price %>&category=<%= cat %>&search=<%= Search %>" class="active"><%= i+1 %></a></li>
-                                    <% } else { %>
-                                        <li><a href="/shop?page=<%= i+1 %>&value=<%= price %>&category=<%= cat %>&search=<%= Search %>">
-                                                <%= i+1 %>
-                                            </a></li>
-                                    <% } %>
-                                <% } %>
-                                <!-- <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li> -->
-                            </ul>
-							
-                        </div>
-                    </div>
+
 
 
 					</div>
 					<div class="row mt-5">
 						<div class="col text-center">
 							<div class="block-27">
+								<div class="ltn__pagination-area text-center">
+									<div class="ltn__pagination">
+										<ul class="d-flex " style="list-style-type:none;">
 
+											<% for(i=0;i<totalPage;i++){ %>
+												&nbsp;&nbsp;
+												<% if(i+1==page) { %>
+													<!-- <li><a href="#" class="active"><i class="fas fa-angle-double-left"></i></a></li> -->
+
+													<li><a href="/shop?page=<%= i+1 %>&value=<%= price %>&category=<%= cat %>&search=<%= Search %>"
+															class="active">
+															<%= i+1 %>
+														</a></li>
+													<% } else { %>
+														<li><a
+																href="/shop?page=<%= i+1 %>&value=<%= price %>&category=<%= cat %>&search=<%= Search %>">
+																<%= i+1 %>
+															</a></li>
+														<% } %>
+															<% } %>
+																<!-- <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li> -->
+										</ul>
+
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -131,18 +138,17 @@
 						<div class="sidebar-box-2">
 							<h2 class="heading">Categories</h2>
 							<div class="fancy-collapse-panel">
-
 								<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 									<% category.forEach(function(category) {%>
 										<div class="panel panel-default">
-											<div class="panel-heading" role="tab" id="headingOne">
-												<h4 class="panel-title">
-													<a data-toggle="collapse" data-parent="#accordion"
-														href="#collapseOne" aria-expanded="true"
-														aria-controls="collapseOne">
+											<div>
+												<h7 class="panel">
+
+													<a href="/shop?category=<%= category._id %>">
 														<%= category.name %>
 													</a>
-												</h4>
+													</a>
+													</h4>
 											</div>
 											<div id="collapseOne" class="panel-collapse collapse" role="tabpanel"
 												aria-labelledby="headingOne">
@@ -156,14 +162,7 @@
 
 					</div>
 					<div class="sidebar">
-
-
-
-  
 					</div>
-
-
-
 					<div class="sidebar-box-2">
 						<h2 class="heading">Price Range</h2>
 						<form method="post" class="colorlib-form-2">
@@ -200,6 +199,22 @@
 								</div>
 							</div>
 						</form>
+						<div class="short-by text-center">
+							<select class="nice-select" name="price" id="price"
+								onchange="location.href = '/shop?value=' + this.value + '&category=<%= cat %>&search=<%= Search %>'">
+								<!-- <option>Default Sorting</option>
+								<option>Sort by popularity</option>
+								<option>Sort by new arrivals</option> -->
+								<% if(price==="High" ){ %>
+									<option value="Low">Price:low to high</option>
+									<option value="High" selected>Price:high to low</option>
+									<% } else { %>
+										- <option value="Low" selected>price:low to high</option>
+										<option value="High">Price :high to low</option>
+										<% } %>
+
+							</select>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -271,82 +286,82 @@
 		</div>
 	</section>
 
-<script>
-	// function searchProducts() {
-	//   const searchQuery = document.getElementById("searchInput").value.trim().toLowerCase();
-	//   const products = document.querySelectorAll(".product");
-  
-	//   products.forEach((product) => {
-	// 	const productName = product.querySelector(".product-name").innerText.toLowerCase();
-	// 	if (productName.includes(searchQuery)) {
-	// 	  product.style.display = "block";
-	// 	} else {
-	// 	  product.style.display = "none";
-	// 	}
-	//   });
-	// }
-// 	function searchProducts() {
-//   const searchQuery = document.getElementById("searchInput").value.trim().toLowerCase();
-//   const products = document.querySelectorAll(".product");
+	<script>
+		// function searchProducts() {
+		//   const searchQuery = document.getElementById("searchInput").value.trim().toLowerCase();
+		//   const products = document.querySelectorAll(".product");
 
-//   products.forEach((product) => {
-//     const productName = product.querySelector(".product-name").innerText.toLowerCase();
-//     const productImageContainer = product.querySelector(".img-prod"); // Get the image container
-    
-//     if (productName.includes(searchQuery)) {
-//       product.style.display = "block"; // Show the product
-      
-//       if (productImageContainer) {
-//         productImageContainer.style.display = "block"; // Show the image
-//       }
-//     } else {
-//       product.style.display = "none"; // Hide the product
-      
-//       if (productImageContainer) {
-//         productImageContainer.style.display = "none"; // Hide the image
-//       }
-//     }
-//   });
-// }
-	function searchProducts() {
-	const searchQuery = document.getElementById("searchInput").value.trim().toLowerCase();
-	const products = document.querySelectorAll(".product");
-	const backgroundDiv = document.querySelector(".background-div"); // Replace with the actual class name
+		//   products.forEach((product) => {
+		// 	const productName = product.querySelector(".product-name").innerText.toLowerCase();
+		// 	if (productName.includes(searchQuery)) {
+		// 	  product.style.display = "block";
+		// 	} else {
+		// 	  product.style.display = "none";
+		// 	}
+		//   });
+		// }
+		// 	function searchProducts() {
+		//   const searchQuery = document.getElementById("searchInput").value.trim().toLowerCase();
+		//   const products = document.querySelectorAll(".product");
 
-	products.forEach((product) => {
-		const productName = product.querySelector(".product-name").innerText.toLowerCase();
-		const productImageContainer = product.querySelector(".img-prod"); // Get the image container
-		
-		if (productName.includes(searchQuery)) {
-		product.style.display = "block"; // Show the product
-		
-		if (productImageContainer) {
-			productImageContainer.style.display = "block"; // Show the image
+		//   products.forEach((product) => {
+		//     const productName = product.querySelector(".product-name").innerText.toLowerCase();
+		//     const productImageContainer = product.querySelector(".img-prod"); // Get the image container
+
+		//     if (productName.includes(searchQuery)) {
+		//       product.style.display = "block"; // Show the product
+
+		//       if (productImageContainer) {
+		//         productImageContainer.style.display = "block"; // Show the image
+		//       }
+		//     } else {
+		//       product.style.display = "none"; // Hide the product
+
+		//       if (productImageContainer) {
+		//         productImageContainer.style.display = "none"; // Hide the image
+		//       }
+		//     }
+		//   });
+		// }
+		function searchProducts() {
+			const searchQuery = document.getElementById("searchInput").value.trim().toLowerCase();
+			const products = document.querySelectorAll(".product");
+			const backgroundDiv = document.querySelector(".background-div"); // Replace with the actual class name
+
+			products.forEach((product) => {
+				const productName = product.querySelector(".product-name").innerText.toLowerCase();
+				const productImageContainer = product.querySelector(".img-prod"); // Get the image container
+
+				if (productName.includes(searchQuery)) {
+					product.style.display = "block"; // Show the product
+
+					if (productImageContainer) {
+						productImageContainer.style.display = "block"; // Show the image
+					}
+				} else {
+					product.style.display = "none"; // Hide the product
+
+					if (productImageContainer) {
+						productImageContainer.style.display = "none"; // Hide the image
+					}
+				}
+			});
+
+			// Handle background div visibility
+			if (backgroundDiv) {
+				if (document.querySelector(".product[style='display: block;']")) {
+					backgroundDiv.style.display = "none"; // Hide background if there are visible products
+				} else {
+					backgroundDiv.style.display = "block"; // Show background if no visible products
+				}
+			}
 		}
-		} else {
-		product.style.display = "none"; // Hide the product
-		
-		if (productImageContainer) {
-			productImageContainer.style.display = "none"; // Hide the image
-		}
-		}
-	});
-
-	// Handle background div visibility
-	if (backgroundDiv) {
-		if (document.querySelector(".product[style='display: block;']")) {
-		backgroundDiv.style.display = "none"; // Hide background if there are visible products
-		} else {
-		backgroundDiv.style.display = "block"; // Show background if no visible products
-		}
-	}
-	}
 
 
 
 
 
-  </script>
-  
+	</script>
+
 
 	<%- include('../layouts/userlayout/footer.ejs') %>

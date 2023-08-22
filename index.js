@@ -4,9 +4,8 @@ const ejs = require("ejs");
 const session = require("express-session");
 const config = require("./config/config");
 const nocache = require("nocache");
-const multer=require('multer')
+const multer = require("multer");
 // const errorHandler=require('./middleware/errorhandler')
-
 
 const mongoose = require("mongoose");
 mongoose
@@ -16,7 +15,7 @@ mongoose
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static("public")); 
 app.use(
   session({
     secret: config.sessionSecret,
@@ -24,8 +23,6 @@ app.use(
     saveUninitialized: true,
   })
 );
-app.get('/admin/productList',);
-
 
 //to access static files like css
 
@@ -33,13 +30,11 @@ app.get('/admin/productList',);
 
 app.use(nocache());
 
-
 //Error HANDLER
 
 // error Handle
 // app.use(errorHandler.error404);
 // app.use(errorHandler.error500);
-
 
 //for user routes
 const userRoute = require("./router/userRouter");
@@ -51,12 +46,13 @@ app.listen(3700, function () {
   console.log("server running,http://127.0.0.1:3700");
 });
 
-
-
 app.use((req, res, next) => {
-  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-  res.header('Expires', '-1');
-  res.header('Pragma', 'no-cache');
+  res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
+  res.header("Expires", "-1");
+  res.header("Pragma", "no-cache");
   next();
 });
 
+// app.use((req, res) => {
+//   res.status(404).render("404");
+// });

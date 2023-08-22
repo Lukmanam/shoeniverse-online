@@ -1,5 +1,3 @@
-
-
 <%- include('../layouts/userlayout/header.ejs') %>
 
 <section class="ftco-section bg-light">
@@ -12,42 +10,94 @@
         <div class="card">
           <div class="card-body">
             <form action="/addAddress" method="POST">
-                <div class="form-group">
-                    <label for="userName">Name</label>
-                    <input type="text" id="userName" name="userName" class="form-control" required>
-                  </div>
+              <div class="form-group">
+                <label for="userName">Name</label>
+                <input
+                  type="text"
+                  id="userName"
+                  name="userName"
+                  class="form-control"
+                  required
+                  pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$"
+                />
+              </div>
 
-                  <div class="form-group">
-                    <label for="mobile">Mobile</label>
-                    <input type="text" id="mobile" name="mobile" class="form-control" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="alternativeMob">Alt Mobile</label>
-                    <input type="text" id="alternativeMob" name="alternativeMob" class="form-control">
-                  </div>
+              <div class="form-group">
+                <label for="mobile">Mobile</label>
+                <input
+                  type="text"
+                  id="mobile"
+                  name="mobile"
+                  class="form-control"
+                  required
+                  pattern="\d{1,10}"
+                />
+              </div>
+              <div class="form-group">
+                <label for="alternativeMob">Alt Mobile</label>
+                <input
+                  type="text"
+                  id="alternativeMob"
+                  name="alternativeMob"
+                  class="form-control"
+                  pattern="\d{1,10}"
+                />
+              </div>
 
               <div class="form-group">
                 <label for="address">Address</label>
-                <input type="text" id="address" name="address" class="form-control" required>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  class="form-control"
+                  required
+                  pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$"
+                />
               </div>
               <div class="form-group">
                 <label for="city">City</label>
-                <input type="text" id="city" name="city" class="form-control" required>
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  class="form-control"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="landmark">Landmark</label>
-                <input type="text" id="landmark" name="landmark" class="form-control">
+                <input
+                  type="text"
+                  id="landmark"
+                  name="landmark"
+                  class="form-control"
+                />
               </div>
-             
+
               <div class="form-group">
                 <label for="pincode">Pincode</label>
-                <input type="text" id="pincode" name="pincode" class="form-control" required>
+                <input
+                  type="text"
+                  id="pincode"
+                  name="pincode"
+                  class="form-control"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="state">State</label>
-                <input type="text" id="state" name="state" class="form-control" required>
-              </div >
-              <button type="submit" class="btn btn-primary  class=text-center">Add Address</button>
+                <input
+                  type="text"
+                  id="state"
+                  name="state"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary class=text-center">
+                Add Address
+              </button>
             </form>
           </div>
         </div>
@@ -138,25 +188,30 @@
 </div>
 </form> END -->
 
- 
-
 <script>
-    function validateForm() {
-        var userName = document.getElementById("username").value.trim();
-        var mobile = document.getElementById("mobile").value.trim();
-        var address = document.getElementById("address").value.trim();
-        var city = document.getElementById("city").value.trim();
-        var state = document.getElementById("state").value.trim();
-        var pincode = document.getElementById("pincode").value.trim();
+  function validateForm() {
+    var userName = document.getElementById("username").value.trim();
+    var mobile = document.getElementById("mobile").value.trim();
+    var address = document.getElementById("address").value.trim();
+    var city = document.getElementById("city").value.trim();
+    var state = document.getElementById("state").value.trim();
+    var pincode = document.getElementById("pincode").value.trim();
 
-        // Validate that required fields are not empty
-        if (userName === '' || mobile === '' || address === '' || city === '' || state === '' || pincode === '') {
-            toastr.error("Please fill in all required fields.");
-            return false;
-        }
-
-        return true;
+    // Validate that required fields are not empty
+    if (
+      userName === "" ||
+      mobile === "" ||
+      address === "" ||
+      city === "" ||
+      state === "" ||
+      pincode === ""
+    ) {
+      toastr.error("Please fill in all required fields.");
+      return false;
     }
+
+    return true;
+  }
 </script>
 
 <%- include('../layouts/userlayout/footer.ejs') %>

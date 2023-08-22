@@ -1,0 +1,106 @@
+<%- include("../layouts/adminlayout/header.ejs") %>
+
+    <body>
+        <main class="main-wrap">
+            <section class="content-main">
+                <div class="content-header">
+                    <h2 class="content-title card-title">Coupon List</h2>
+                    <a href="/admin/addcoupon" class="btn btn-primary btn-sm rounded">Add New Coupon</a>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Coupon Name</th>
+                                    <th scope="col">Coupon Type</th>
+                                    <th scope="col">Discount Amount</th>
+                                    <th scope="col">Minimum Cart Amount</th>
+                                    <th scope="col">Max Disc Amount</th>
+                                    <th scope="col">Expiry</th>
+                                    <th scope="col">Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% couponList.forEach(function(coupon, index) { %>
+                                    <tr>
+                                        <td>
+                                            <%= coupon.couponName %>
+                                        </td>
+                                        <td>
+                                            <%= coupon.discountType %>
+                                        </td>
+                                        <td>
+                                            <%= coupon.discountAmount %>
+                                        </td>
+                                        <td>
+                                            <%= coupon.minCartAmount %>
+                                        </td>
+                                        <td>
+                                            <%= coupon.maxDiscAmount %>
+                                        </td>
+                                        <td>
+                                            <%= coupon.expired.toLocaleDateString() %>
+                                        </td>
+                                        <td>
+                                            <% if (coupon.status) { %>
+                                                <span class="badge rounded-pill alert-success">Active</span>
+                                                <% } else { %>
+                                                    <span class="badge rounded-pill alert-danger">Expired</span>
+                                                    <% } %>
+                                        </td>
+                                        <td>
+                                            <a href="/admin/editCoupon?coupon=<%= coupon._id %>"
+                                                class="btn btn-sm font-sm rounded btn-brand"><i
+                                                    class="material-icons md-edit"></i> Edit</a>
+                                            <button id="couponId<%= coupon.name %>"
+                                                class="btn btn-sm font-sm btn-light rounded"
+                                                onclick="toggleCouponStatus('<%= coupon.name %>')">
+                                                <% if (coupon.status==='active' ) { %> Deactivate <% } else if
+                                                        (coupon.status==='expired' ) { %> Reactivate <% } %>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+
+    <%- include("../layouts/adminlayout/footer.ejs") %>
+
+        <script>
+            const toggleCouponStatus = async (couponName) => {
+                try {
+                    const response = await axios.patch("/admin/toggleCouponStatus", {
+                        couponName,
+                    });
+
+                    if (response.data.message === "success") {
+                        const couponStatusElement = document.getElementById(
+                            `couponId${couponName}`
+                        );
+                        const statusBadgeElement =
+                            couponStatusElement.previousElementSibling.querySelector(".badge");
+
+                        if (response.data.status === "active") {
+                            couponStatusElement.textContent = "Deactivate";
+                            statusBadgeElement.classList.remove("alert-danger");
+                            statusBadgeElement.classList.add("alert-success");
+                            statusBadgeElement.textContent = "Active";
+                        } else if (response.data.status === "expired") {
+                            couponStatusElement.textContent = "Reactivate";
+                            statusBadgeElement.classList.remove("alert-success");
+                            statusBadgeElement.classList.add("alert-danger");
+                            statusBadgeElement.textContent = "Expired";
+                        }
+                    }
+                } catch (error) {
+                    console.log(error.message);
+                }
+            };
+        </script>

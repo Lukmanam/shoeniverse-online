@@ -31,7 +31,7 @@
                                         <label class="form-label" for="category">Category</label>
                                         <select class="form-select" id="category" name="category" required>
                                             <% category.forEach(function (category) { %>
-                                                <option value="<%= category.name %>">
+                                                <option value="<%= category.id %>">
                                                     <%= category.name %>
                                                 </option>
                                                 <% }); %>
@@ -95,7 +95,7 @@
                                             multiple required>
 
                                     </div>
-                                </div> 
+                                </div>
                             </div> <!-- .row end// -->
                             <div class="button">
                                 <button class="btn btn-primary" type="submit" value="Save">Add</button>

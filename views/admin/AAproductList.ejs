@@ -1,85 +1,73 @@
 <%- include('../layouts/adminlayout/header.ejs') %>
 
+<body>
+  <main class="main-wrap">
+    <section class="content-main">
+      <div class="content-header">
+        <div>
+          <h2 class="content-title card-title">Products List</h2>
+        </div>
+        <div>
+          <a href="/admin/addproduct" class="btn btn-primary btn-sm rounded"
+            >Add new Product</a
+          >
+        </div>
+      </div>
+      <div class="card mb-4">
+        <header class="card-header">
+          <div class="col-search">
+            <form class="searchform">
+              <div class="input-group">
+                <input
+                  list="search_terms"
+                  type="text"
+                  class="form-control"
+                  placeholder="Search term"
+                />
+                <button class="btn btn-light bg" type="button">
+                  <i class="material-icons md-search"></i>
+                </button>
+              </div>
+              <datalist id="search_terms">
+                <option value="Casual"></option>
+              </datalist>
+            </form>
+          </div>
+        </header>
+        <!-- card-header end// -->
 
-    <body>
-        <main class="main-wrap">
-           
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Products List</h2>
+        <div class="card-body" style="padding: 50px">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">NO</th>
+                  <th scope="col">PRODUCTS</th>
+                  <th scope="col">DESCRIPTION</th>
+                  <th scope="col">CATEGORY</th>
+                  <th scope="col">QUANTITY</th>
+                  <th scope="col">PRICE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% product.forEach(function(product,index)) {%>
+                <tr>
+                  <td><%=index+1 %></td>
+                  <td><%= product.name %></td>
+                  <td><%= product.description %></td>
+                  <td><%= product.category %></td>
+                  <td><%= product.quantity %></td>
+                  <td><%= product.price %></td>
+                </tr>
+                <%} %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- content-main end// -->
 
-                    </div>
-                    <div>
-
-                        <a href="/admin/addproduct" class="btn btn-primary btn-sm rounded">Add new Product</a>
-                    </div>
-                </div>
-                <div class="card mb-4">
-                    <header class="card-header">
-
-                        <div class="col-search">
-                            <form class="searchform">
-                                <div class="input-group">
-                                    <input list="search_terms" type="text" class="form-control"
-                                        placeholder="Search term" />
-                                    <button class="btn btn-light bg" type="button"><i
-                                            class="material-icons md-search"></i></button>
-                                </div>
-                                <datalist id="search_terms">
-                                    <option value="Casual"></option>
-
-                                </datalist>
-                            </form>
-                        </div>
-                    </header>
-                    <!-- card-header end// -->
-                    
-                    <div class="card-body" style="padding: 50px;">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                            <th scope="col">NO</th>
-                                            <th scope="col">PRODUCTS</th>
-                                            <th scope="col">DESCRIPTION</th>
-                                            <th scope="col">CATEGORY</th>
-                                            <th scope="col">QUANTITY</th>
-                                            <th scope="col">PRICE</th> 
-
-                                    </tr>
-                                </thead><tbody>
-
-                                    <% product.forEach(function(product,index))  {%>
-                                        <tr>
-                                            <td><%=index+1 %></td>
-                                            <td><%= product.name %></td>
-                                            <td><%= product.description %></td>
-                                            <td><%= product.category %></td>
-                                            <td><%= product.quantity %></td>
-                                            <td><%= product.price %></td>
-                                        </tr>
-                                       <%}   %>
-                                </tbody>
-                                
-                                        
-                                
-                                
-                                
-                                
-                            </table>
-                          
-                        </div>
-                
-                        
-                    </div>
-                    
-                </div>
-               
-              
-            </section>
-            <!-- content-main end// -->
-
-
-
-            <%- include('../layouts/adminlayout/footer.ejs') %>
+    <%- include('../layouts/adminlayout/footer.ejs') %>
+  </main>
+</body>

@@ -1,11 +1,6 @@
 <%- include('../layouts/adminlayout/header.ejs')%>
 
-                   
-                    
-
-                     
                 
-            
            
         <main class="main-wrap">
            
@@ -15,31 +10,45 @@
                         <h2 class="content-title card-title">Order List</h2>
                         <p>Total Orders </p>
                     </div>
+                    
                     <div>
-                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
+                        <button href="#" class="btn btn-light rounded font-md" onclick="generateExcel()">Excel</button>
+                        <button class="btn btn-light rounded font-md" onclick="generatePDF()">PDF Download</button>
                     </div>
                 </div>
                 <div class="card mb-4">
                     <header class="card-header">
                         <div class="row gx-3">
                             <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" />
+                                <form action="/admin/adminOrderlist" method="GET">
+                                    <input type="text" name="search" placeholder="Search..." class="form-control" value="<%= search || '' %>">
+                                    <button type="submit" class="btn btn-sm font-sm rounded btn-brand mt-3">Search</button>
+                                </form>
                             </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Status</option>
-                                    <option>Active</option>
-                                    <option>Disabled</option>
-                                    <option>Show all</option>
-                                </select>
+                            <div class="col-lg-2 col-md-3 col-6">
+                                <form action="/admin/adminOrderlist" method="GET">
+                                    <select class="form-select" name="status">
+                                        <option>Choose</option>
+                                        <option value="placed"<%= status === 'placed' ? 'selected' : '' %>>Placed</option>
+                                        <option value="delivered" <%= status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+                                        <option value="Cancelled"<%= status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                        <option value="Shipped"<%= status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                        <option value="">Show all</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm font-sm rounded btn-brand mt-3">Filter</button>
+                                </form>
                             </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Show 20</option>
-                                    <option>Show 30</option>
-                                    <option>Show 40</option>
-                                </select>
+                            <div class="col-lg-2 col-md-3 col-6">
+                                <form action="/admin/adminOrderlist" method="GET">
+                                    <select class="form-select" name="itemsPerPage">
+                                        <option value="10">Show 10</option>
+                                        <option value="20">Show 20</option>
+                                        <option value="30">Show 30</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm font-sm rounded btn-brand mt-3">Apply</button>
+                                </form>
                             </div>
+                        </div>
                         </div>
                     </header>
                     <!-- card-header end// -->
@@ -74,18 +83,20 @@
                                                 <ul class="dropdown-menu">
                                                     <li><a class="dropdown-item" href="/admin/shipping?id=<%= orders._id %>">shipped</a></li>
                                                     <li><a class="dropdown-item" href="/admin/delivered?id=<%= orders._id %>">delivered</a></li>
+                                                    <li><a class="dropdown-item" href="/admin/cancelOrderadmin?id=<%= orders._id %>">Cancel</a></li>
                                                 </ul>
                                                 <% } else if (orders.status=='Cancelled'){ %>
                                                     <button class="btn btn-danger btn-sm " type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                         <%= orders.status %>
                                                     </button>
                                                 <% } else if (orders.status=='Shipped'){ %>
-                                                    <button class="btn btn-warning btn-sm dropdown-toggle " type="button" data-bs-toggle="dropdown"
+                                                    <button class="btn btn-warning btn-sm  " type="button" data-bs-toggle="dropdown"
                                                         aria-expanded="false">
                                                         <%= orders.status %>
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         <li><a class="dropdown-item" href="/admin/delivered?id=<%= orders._id %>">delivered</a></li>
+                                                        <li><a class="dropdown-item" href="/admin/cancelOrderadmin?id=<%= orders._id %>">Cancel</a></li>
                                                     </ul>
                                                 <% } else if (orders.status=='Delivered' ) { %>
                                                     <button class="btn btn-success btn-sm " type="button" data-bs-toggle="dropdown"
@@ -138,27 +149,83 @@
                     </nav>
                 </div>
             </section>
+
+
+            <script>
+                // PDF Download
+                function generatePDF() {
+                    const orders = document.querySelectorAll('.table tbody tr');
+            
+                    const orderRows = [];
+                    orders.forEach(order => {
+                        const orderId = order.cells[0].innerText;
+                        const Date = order.cells[1].innerText;
+                        const Total = order.cells[2].innerText;
+                        const Status = order.cells[3].innerText;
+                        const PayMethod = order.cells[4].innerText;
+            
+                        orderRows.push([orderId,Date, Total, Status, PayMethod]);
+                    });
+            
+                    const pdfFormat = {
+                        content: [
+                            { text: 'Sales Report', style: 'header' },
+                            {
+                                table: {
+                                    headerRows: 1,
+                                    widths: [60,70,60,45,50,50,115],
+                                    body: [['orderId', 'Date', 'Total', 'Status', 'Payment Method'], ...orderRows] }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 20,
+                                bold: true,
+                                alignment: 'center',
+                                margin: [0, 0, 0, 10]
+                            }
+                        }
+                    };
+            
+                    pdfMake.createPdf(pdfFormat).print();
+                }
+            
+                // Excel Download
+                function generateExcel() {
+                    const orders = document.querySelectorAll('.table tbody tr');
+            
+                    const orderData = [];
+                    orders.forEach(order => {
+                        const orderId = order.cells[0].innerText;
+                        const Date = order.cells[1].innerText;
+                        const Total = order.cells[2].innerText;
+                        const status = order.cells[3].innerText;
+                        const PayMethod = order.cells[4].innerText;
+                       
+                        
+            
+                        orderData.push([orderId, Date, Total, status,PayMethod ]);
+                    });
+            
+                    const header = ['orderId', 'Date', 'Total', 'Status','PayMethod' ];
+                    const data = [header, ...orderData];
+            
+                    const ws = XLSX.utils.aoa_to_sheet(data);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'Sales Report');
+            
+                    // Generating filename based on the current date and time
+                    const filename = 'Sales_Report_' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.xlsx';
+            
+                    // Convert the workbook to a binary Excel file and trigger the download
+                    XLSX.writeFile(wb, filename);
+                }
+            </script>
+
+
+
+
+
+            
             <!-- content-main end// -->
-            <footer class="main-footer font-xs">
-                <div class="row pb-30 pt-15">
-                    <div class="col-sm-6">
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>
-                        &copy; Nest - HTML Ecommerce Template .
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end">All rights reserved</div>
-                    </div>
-                </div>
-            </footer>
-        </main>
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    </body>
-</html>
+            <%- include('../layouts/adminlayout/footer.ejs') %>

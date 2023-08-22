@@ -4,12 +4,68 @@ const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const path = require("path");
 const { log } = require("console");
+const Product = require("../model/productModel");
+const category = require("../model/categorymodel");
+const Order = require("../model/orderModel");
 dotenv.config();
+const dashboardHelper = require("../helper/dashboardHelper");
 
 //LOAD DASHOARD////////////////////////////////////
 const loaddashboard = async (req, res) => {
   try {
-    res.render("index");
+    const productCount = await Product.count();
+    const categoryCount = await category.count();
+    const orderCount = await Order.count();
+    const today = new Date();
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    const currMonthStartDate = new Date(currentYear, currentMonth, 1, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today.getDate() - 1);
+
+    const promises = [
+      dashboardHelper.totalRevenue(),
+      dashboardHelper.monthlyTotalRevenue(currMonthStartDate, now),
+      dashboardHelper.dailyChart(),
+      dashboardHelper.paymentMethod(),
+    ];
+
+    const results = await Promise.all(promises);
+    const totalRevenue = results[0];
+    const monthlyTotalRevenue = results[1]; // Use the correct index
+    const dailyChart = results[2];
+    const paymentMethod = results[3];
+
+    let codPayAmount, onlinePayAmount;
+    if (paymentMethod[0]._id === "COD") {
+      codPayAmount = paymentMethod[0].amount;
+    } else if (paymentMethod[0]._id == "onlinePayment") {
+      onlinePayAmount = paymentMethod[0].amount;
+    }
+
+    if (paymentMethod[1]._id === "COD") {
+      codPayAmount = paymentMethod[1].amount;
+    } else if (paymentMethod[1]._id === "onlinePayment") {
+      onlinePayAmount = paymentMethod[1].amount;
+    }
+
+    // if (paymentMethod[2]._id === 'COD') {
+    //     codPayAmount = paymentMethod[2].amount;
+    // } else if (paymentMethod[2]._id === 'onlinePayment') {
+    //     onlinePayAmount = paymentMethod[2].amount;
+    // }
+
+    res.render("index", {
+      productCount,
+      categoryCount,
+      orderCount,
+      totalRevenue,
+      dailyChart,
+      monthlyTotalRevenue,
+      codPayAmount: codPayAmount, // Pass the result to the template
+      onlinePayAmount: onlinePayAmount,
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -45,17 +101,17 @@ const verifyLogin = async (req, res) => {
         res.render("adminlogin", { message: "incorrect credentials" });
       } else {
         req.session.admin_id = process.env.ADMIN_USER;
-    console.log(req.session.admin_id, ":This is ADMIN SESSION");
+        console.log(req.session.admin_id, ":This is ADMIN SESSION");
         res.redirect("/admin/dashboard");
       }
     }
   } catch (err) {
-    console.log("Error in Sign in",err);
-    res.render("adminlogin",{message:"An error Occured in sign in"})
+    console.log("Error in Sign in", err);
+    res.render("adminlogin", { message: "An error Occured in sign in" });
   }
 };
 
- const adminLogout = async (req, res) => {
+const adminLogout = async (req, res) => {
   try {
     req.session.destroy();
     res.redirect("/admin");
@@ -120,7 +176,6 @@ const loaduserlist = async (req, res) => {
 //   }
 // };
 
-
 //BLOCK AND UNBLOCK USER/////////////////////////////////
 const blockUser = async (req, res) => {
   try {
@@ -129,7 +184,6 @@ const blockUser = async (req, res) => {
     const blockUser = await UserDB.findById({ _id: userId });
 
     if (blockUser.is_blocked == 0) {
-      
       await UserDB.findByIdAndUpdate(
         { _id: userId },
         { $set: { is_blocked: 1 } }
@@ -165,7 +219,7 @@ const loadCategory = async (req, res) => {
 
 const loadaddCategory = async (req, res) => {
   try {
-    res.render("addCategory", { message: ""});
+    res.render("addCategory", { message: "" });
   } catch (error) {
     console.log(error.message);
   }
@@ -180,12 +234,14 @@ const insertCategory = async (req, res) => {
 
     // Convert the category name to lowercase to make it case-insensitive
     const inputCategory = name.toLowerCase();
-    
+
     // Check if a category with the same name (case-insensitive) already exists
-    const existingCategory = await categoryDB.findOne({ name: { $regex: new RegExp(`^${inputCategory}$`, 'i') } });
+    const existingCategory = await categoryDB.findOne({
+      name: { $regex: new RegExp(`^${inputCategory}$`, "i") },
+    });
 
     if (existingCategory) {
-      res.render('addCategory', { message: 'Category Already Exists' });
+      res.render("addCategory", { message: "Category Already Exists" });
     } else {
       const categoryData = new categoryDB({
         name: name,
@@ -204,13 +260,12 @@ const insertCategory = async (req, res) => {
   }
 };
 
-
 // Load Edit Category///////////////////////////
 
 const loadEditcategory = async (req, res) => {
   try {
     const { name } = req.query;
-    const catData = await categoryDB.findOne({ name:name });
+    const catData = await categoryDB.findOne({ name: name });
     res.render("editCategory", { catData });
   } catch (error) {
     console.log(error.message);
@@ -220,10 +275,13 @@ const loadEditcategory = async (req, res) => {
 //Edit category////////////////
 const editCategory = async (req, res) => {
   try {
-    const qname=req.query.name
+    const qname = req.query.name;
     const { name, description } = req.body;
-  await categoryDB.updateOne( { name:qname},{$set:{name:name, description:description}})
-   
+    await categoryDB.updateOne(
+      { name: qname },
+      { $set: { name: name, description: description } }
+    );
+
     res.redirect("/admin/category");
   } catch (error) {
     console.log(error.message);
@@ -231,37 +289,34 @@ const editCategory = async (req, res) => {
 };
 
 //LIST AND UNLIST CATEGORY////////////////////////////
-const unlistCategory=async(req,res)=>
-{
+const unlistCategory = async (req, res) => {
   try {
-    const {catgname}=req.body
-    const unlistCategory=await categoryDB.findOne({name:catgname})
+    const { catgname } = req.body;
+    const unlistCategory = await categoryDB.findOne({ name: catgname });
     console.log(unlistCategory);
 
-    if(unlistCategory.blocked==false)
-    {
+    if (unlistCategory.blocked == false) {
       console.log("block false");
-      await categoryDB.updateOne({name:catgname},{$set:{blocked:true}});
+      await categoryDB.updateOne(
+        { name: catgname },
+        { $set: { blocked: true } }
+      );
       res.status(201).json({ message: true }); // Use true instead of 1
-
-    }
-    else
-    {
+    } else {
       console.log("block true");
-      await categoryDB.updateOne({name:catgname},{$set:{blocked:false}})
+      await categoryDB.updateOne(
+        { name: catgname },
+        { $set: { blocked: false } }
+      );
       res.status(201).json({ message: false });
     }
-    
   } catch (error) {
     console.log(error.message);
-   res
-    .status(500)
+    res
+      .status(500)
       .json({ message: "Error occurred while processing the request." });
   }
-}
-
-
-
+};
 
 module.exports = {
   loaddashboard,
@@ -277,6 +332,5 @@ module.exports = {
   loadCategory,
   editCategory,
   unlistCategory,
-  adminLogout
-  
+  adminLogout,
 };

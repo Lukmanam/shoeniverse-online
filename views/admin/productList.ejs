@@ -20,16 +20,19 @@
                 <div class="card mb-4">
                     <header class="card-header">
                         <div class="col-search">
-                            <form class="searchform" action="/admin/productList" method="GET"> <!-- Assuming the route to the loadproductlist function is /admin/productList -->
+                            <form class="searchform" action="/admin/productList" method="GET">
+                                <!-- Assuming the route to the loadproductlist function is /admin/productList -->
                                 <div class="input-group">
-                                  <input list="search_terms" type="text" class="form-control" name="searchTerm" placeholder="Search term" />
-                                  <button class="btn btn-light bg" type="submit"><i class="material-icons md-search"></i></button>
+                                    <input list="search_terms" type="text" class="form-control" name="searchTerm"
+                                        placeholder="Search term" />
+                                    <button class="btn btn-light bg" type="submit"><i
+                                            class="material-icons md-search"></i></button>
                                 </div>
                                 <datalist id="search_terms">
-                                  <option value="Products"></option>
+                                    <option value="Products"></option>
                                 </datalist>
-                              </form>
-                              
+                            </form>
+
                         </div>
 
 
@@ -50,7 +53,7 @@
                                 <tbody>
                                     <tr>
 
-                                    <% product.forEach(function(product,index) {%>
+                                        <% product.forEach(function(product,index) {%>
                                     <tr>
                                         <td> <img src="/adminAsset/IMAGES/<%= product.image[0] %>"
                                                 class="img-sm img-thumbnail" alt=""></td>
@@ -58,7 +61,7 @@
                                             <%= product.name %>
                                         </td>
                                         <td>
-                                            <%= product.category %>
+                                            <%= product.category.name %>
                                         </td>
                                         <td>
                                             <%= product.quantity %>
@@ -79,49 +82,45 @@
                                                         class="badge rounded-pill alert-danger"></span>
                                                 </td>
                                                 <% } %>
-                                         <!-- ///////////////////////////////  -->
-                                        <!-- <td><span class="badge rounded-pill alert-success">Active</span></td> -->
-                                        <td>
-                                            <a href="/admin/editProduct?product=<%=product._id%>" class="btn btn-sm font-sm rounded btn-brand"><i
-                                                    class="material-icons md-edit"></i> Edit</a>
-                                                    <button id="proId<%=product.name%>"
-                                                    class="btn btn-sm font-sm btn-light rounded" 
-                                                    onclick="Unlist('<%=product.name%>')">
-                                                    <%if(product.blocked==false){%> Unlist <% }else{%>
-                                                            List <% }%>
-                                            <!-- <a href="#" class="btn btn-sm font-sm btn-light rounded"><i
+                                                    <!-- ///////////////////////////////  -->
+                                                    <!-- <td><span class="badge rounded-pill alert-success">Active</span></td> -->
+                                                    <td>
+                                                        <a href="/admin/editProduct?product=<%=product._id%>"
+                                                            class="btn btn-sm font-sm rounded btn-brand"><i
+                                                                class="material-icons md-edit"></i> Edit</a>
+                                                        <button id="proId<%=product.name%>"
+                                                            class="btn btn-sm font-sm btn-light rounded"
+                                                            onclick="Unlist('<%=product.name%>')">
+                                                            <%if(product.blocked==false){%> Unlist <% }else{%>
+                                                                    List <% }%>
+                                                                        <!-- <a href="#" class="btn btn-sm font-sm btn-light rounded"><i
                                                     class="material-icons md-delete_forever"></i> Delete</a> -->
-                                        </td>
-                                    </tr> <%}) %>
+                                                    </td>
+                                    </tr>
+                                    <%}) %>
                                 </tbody>
                                 <%- include("../layouts/adminlayout/footer.ejs") %>
 
 
-                                <script>
-                                    const Unlist = async (prodName) => {
-                                        try {
-                                            const Unlist = await axios.patch("/admin/unlistProduct", { prodName });
-                            
-                                            if (Unlist.data.message === true) {
-                                                document.getElementById(`proId${prodName}`).textContent = 'List';
-                                                document.getElementById(`block1${prodName}`).innerText = 'Deleted';
-                                                document.getElementById(`block2${prodName}`).innerText = '';
+                                    <script>
+                                        const Unlist = async (prodName) => {
+                                            try {
+                                                const Unlist = await axios.patch("/admin/unlistProduct", { prodName });
+
+                                                if (Unlist.data.message === true) {
+                                                    document.getElementById(`proId${prodName}`).textContent = 'List';
+                                                    document.getElementById(`block1${prodName}`).innerText = 'Deleted';
+                                                    document.getElementById(`block2${prodName}`).innerText = '';
+                                                }
+                                                else if (Unlist.data.message === false) {
+                                                    document.getElementById(`proId${prodName}`).textContent = 'Unlist';
+                                                    document.getElementById(`block2${prodName}`).innerText = 'Listed';
+                                                    document.getElementById(`block1${prodName}`).innerText = ''; // Clear the content of the 'Blocked' span
+
+                                                }
+                                            } catch (error) {
+                                                console.log(error.message);
                                             }
-                                            else if (Unlist.data.message === false) {
-                                    document.getElementById(`proId${prodName}`).textContent = 'Unlist';
-                                    document.getElementById(`block2${prodName}`).innerText = 'Listed';
-                                    document.getElementById(`block1${prodName}`).innerText = ''; // Clear the content of the 'Blocked' span
-                            
-                                            }
-                                        } catch (error) {
-                                            console.log(error.message);
                                         }
-                                    }
-                            
-                                </script>
 
-
-
-
-                               
-                            
+                                    </script>

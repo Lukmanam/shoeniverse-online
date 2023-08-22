@@ -81,7 +81,7 @@
 									</div>
 								</div>
 								<%})%>
-									
+
 						</div>
 						<div class="row justify-content-center mt-3">
 							<div class="col-md-6 text-center">
@@ -104,14 +104,14 @@
 									</p>
 									<p class="d-flex">
 										<span>Discount</span>
-										<span>₹0.00</span>
+										<span id="discountAmount">₹0.00</span>
 									</p>
 									<hr>
 									<p class="d-flex total-price">
-										<span	> Total</span>
+										<span> Total</span>
 										<span id="grandtotal"><strong id="newTotal">
-											₹<%= Total %>/-</strong>
-											
+												₹<%= Total %>/-</strong>
+
 										</span>
 									</p>
 								</div>
@@ -119,17 +119,19 @@
 							<div class="col-md-6">
 								<div class="cart-detail bg-light p-3 p-md-4">
 									<h3 class="billing-heading mb-4">Payment Method</h3>
-									<!-- <div class="form-group">
-										<div class="col-md-12">
-											<div class="radio">
-											   <label><input type="radio" name="optradio" class="mr-2"> Direct Bank Tranfer</label>
-											</div>
-										</div>
-									</div> -->
 									<div class="form-group">
 										<div class="col-md-12">
 											<div class="radio">
-												<label><input type="radio" name="payment" value="COD" id="COD" required/>Cash On
+												<label><input type="radio" name="payment" value="onlinePayment"
+														id="onlinePayment" class="mr-2">RazorPay</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-12">
+											<div class="radio">
+												<label><input type="radio" name="payment" value="COD" id="COD"
+														class="mr-2" required />Cash On
 													Delivery</label>
 											</div>
 										</div>
@@ -144,67 +146,216 @@
 									<div class="form-group">
 										<div class="col-md-12">
 											<div class="checkbox">
-												<label><input type="checkbox" value="" class="mr-2" required> I have read and
+												<label><input type="checkbox" value="" class="mr-2" required> I have
+													read and
 													accept the terms and conditions</label>
 											</div>
 										</div>
 									</div>
-									<button type="submit">Place order</button>
+									<button type="submit" class="btn btn-primary py-3 px-4"> Place order</button>
+
 									<!-- <p><a href="#" class="btn btn-primary py-3 px-4">Place order</a> -->
 								</div>
 							</div>
 						</div>
-					</form>	
+					</form>
+					<div class="container">
+						<form id="coupon-form">
+							<div class="cart-coupon mt-3">
+								<input type="text" name="cart-coupon" placeholder="Coupon code" id="code">
+								<button type="submit" class="btn theme-btn-2 btn-effect-2 btn-primary">Apply
+									Coupon</button>
+								<!-- <p>Available Coupons..? <a href="#" id="show-coupons-link" data-bs-toggle="modal"
+                            data-bs-target="#couponsModal">Click Here</a></p> -->
+							</div>
+						</form>
+					</div>
 				</div>
-				
+				<div class="modal fade" id="couponsModal" tabindex="-1" aria-labelledby="couponsModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="couponsModalLabel">Available Coupons</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<% coupon.forEach(coupon=>{ %>
+									<ul>
+										<% if(coupon.discountType=="Fixed Amount" ){ %>
+											<li>
+												<%=coupon.couponName %>: ₹<%=coupon.discountAmount %> off
+											</li>
+											<% }else{%>
+												<li>
+													<%=coupon.couponName %>: <%=coupon.discountAmount %>% off
+												</li>
+												<% } %>
+
+									</ul>
+
+									<% }) %>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<!-- .col-md-8 -->
 			</div>
 		</div>
 	</section> <!-- .section -->
 
 
-	
-    <script>
 
-        $("#checkout-form").submit((e)=>{
-            e.preventDefault();
-            const amount = document.getElementById("total").innerHTML;
-            const totalAmount = document.getElementById("grandtotal").innerHTML;
-            let address = $("input[name=selectAddress]:checked").val();
-            let payment = $("input[name=payment]:checked").val();
-            if(address == "undefined"){
-                toastr.error("please select a address")
-            }
-            console.log(address);
-            $.ajax({
-                url :"/checkout",
-                method :"post",
-                data :{
-                    amount:parseInt(amount.replace(/[^\d.]/g, '')),
-                    total: parseInt(totalAmount.replace(/[^\d.]/g, '')),
-                    address: address,
-                    payment :payment
-                },
-                success:(response)=>{
-                    if(response.check == true){
-                        toastr.error("please select an address and Payment Method","",{
-                          timeOut: 2500,
-                         progressBar : true
-                        });
-                    } else if(response.stock == true){
-                         toastr.error(`${response.productName} is out of stock....!!! please check your cart..Available stock is ${response.stockCount}`, "", {
-                            timeOut: 2500,
-                            progressBar: true
-                        });
-                   
-                    }else if(response.codSuccess==true){
-						
-                        window.location.href = `/loadOrderCompleted`;	
-                    } 
-                }
-            })
-        })
+	<script>
 
-</script>
-			
-					<%- include('../layouts/userlayout/footer.ejs') %>
+		$("#checkout-form").submit((e) => {
+
+			e.preventDefault();
+			console.log("submit button Clicked");
+			console.log("set");
+
+			console.log("Order kurach working aan");
+			const amount = document.getElementById("total").innerHTML;
+			const totalAmount = document.getElementById("grandtotal").innerHTML;
+			let address = $("input[name=selectAddress]:checked").val();
+			let payment = $("input[name=payment]:checked").val();
+			if (address == "undefined") {
+				toastr.error("please select a address")
+			}
+			console.log(address);
+			$.ajax({
+				url: "/checkout",
+				method: "post",
+				data: {
+					amount: parseInt(amount.replace(/[^\d.]/g, '')),
+					total: parseInt(totalAmount.replace(/[^\d.]/g, '')),
+					address: address,
+					payment: payment
+				},
+				success: (response) => {
+					if (response.check == true) {
+						toastr.error("please select an address and Payment Method", "", {
+							timeOut: 2500,
+							progressBar: true
+						});
+					} else if (response.stock == true) {
+						toastr.error(`${response.productName} is out of stock....!!! please check your cart..Available stock is ${response.stockCount}`, "", {
+							timeOut: 2500,
+							progressBar: true
+						});
+
+					} else if (response.codSuccess == true) {
+
+						window.location.href = `/loadOrderCompleted`;
+					}
+					else {
+						razorpayPayment(response.order)
+					}
+				}
+			})
+		})
+
+
+
+		function razorpayPayment(order) {
+			console.log("Online Payment is started Working");
+
+			var options = {
+				"key": "rzp_test_Lie7XPoiRsrtMV", // Enter the Key ID generated from the Dashboard
+				"amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+				"currency": "INR",
+				"name": "Shoeniverse-The shoe Garage", //your business name
+				"description": "Test Transaction",
+				"image": "https://example.com/your_logo",
+				"order_id": order.id,
+				"handler": function (response) {
+					verifyPayment(response, order);
+				},
+				"prefill": {
+					"name": "Lukman",
+					"email": "Lukman@example.com",
+					"contact": "9000090000"
+				},
+				"notes": {
+					"address": "Razorpay Corporate Office"
+				},
+				"theme": {
+					"color": "#3399cc"
+				}
+			};
+			var rzp1 = new Razorpay(options);
+			rzp1.open();
+		}
+		function verifyPayment(payment, order) {
+			console.log("verify");
+			const amount = document.getElementById("total").innerHTML;
+			const totalAmount = document.getElementById("newTotal").innerHTML;
+			$.ajax({
+				url: "/verifyPayment",
+				method: "post",
+				data: {
+					payment,
+					amount,
+					totalAmount,
+					order
+				},
+				success: (response) => {
+					if (response.success) {
+						window.location.href = `/loadOrderCompleted`
+					} else {
+						alert('payment failed');
+					}
+				}
+			})
+		}
+
+		// apply coupon
+		$("#coupon-form").submit((e) => {
+			console.log("COUPON IS WORKINg");
+
+			e.preventDefault();
+			const code = $("#code").val();
+			const amount = document.getElementById("grandtotal").innerHTML;
+			console.log("This is Money", amount);
+			$.ajax({
+				url: "/applyCoupon",
+				method: "post",
+				data: {
+					code: code,
+					amount: parseInt(amount.replace(/[^\d.]/g, ''))
+				},
+				success: (response) => {
+					console.log(response);
+					if (response.user) {
+						alert("Oops! This user has already used this coupon");
+					} else if (response.status) {
+						alert("Oops! This coupon is not in use");
+					} else if (response.cartAmount) {
+						alert("Oops! You can't use the coupon... Buy more");
+					} else if (response.date) {
+						console.log("Oops! Coupon date expired");
+					} else if (response.amountKey) {
+						console.log(response.disTotal, "distotal");
+						document.getElementById('discountAmount').innerText = response.discAmount;
+						document.getElementById('newTotal').innerHTML = response.disTotal;
+						alert("Coupon Applied")
+					} else if (response.invalid) {
+						alert("Oops! Invalid coupon");
+					}
+					else {
+						console.log("hai");
+					}
+				}
+			});
+		});
+
+
+
+	</script>
+
+	<%- include('../layouts/userlayout/footer.ejs') %>

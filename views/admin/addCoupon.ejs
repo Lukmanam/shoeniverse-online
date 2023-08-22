@@ -1,0 +1,58 @@
+<%- include("../layouts/adminlayout/header.ejs") %>
+
+    <body>
+        <main class="main-wrap">
+            <section class="content-main">
+                <div class="content-header">
+                    <h2 class="content-title card-title">Add Coupon</h2>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form action="/admin/addCoupon" method="POST">
+                            <div class="mb-3">
+                                <label for="couponName" class="form-label">Coupon Name</label>
+                                <input type="text" class="form-control" id="couponName" name="couponName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="couponType" class="form-label">Coupon Type</label>
+                                <select class="form-select" id="couponType" name="discountType" required>
+                                    <option value="percentage">Percentage</option>
+                                    <option value="fixed">Fixed Amount</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="discountAmount" class="form-label">Discount Amount</label>
+                                <input type="number" class="form-control" id="discountAmount" name="discountAmount"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="minimumCartAmount" class="form-label">Minimum Cart Amount</label>
+                                <input type="number" class="form-control" id="minimumCartAmount" name="minCartAmount"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="expired" class="form-label">Expired</label>
+                                <input type="date" class="form-control" id="expired" name="expired" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="expired" class="form-label">Max Discount Amount</label>
+                                <input type="number" class="form-control" id="maxDiscAmount" name="maxDiscAmount"
+                                    required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="active">Active</option>
+                                    <option value="expired">Expired</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Coupon</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+
+    <%- include("../layouts/adminlayout/footer.ejs") %>

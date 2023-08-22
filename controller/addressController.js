@@ -107,7 +107,7 @@ const addNewaddress = async (req, res) => {
 //         const addressId = req.query.id;
 //         const addressData = await Address.findOne({ user: user ,"addresses._id":addressId})
 //         const aData = addressData.addresses.find((addr) => addr._id.toString()=== addressId);
-      
+
 //         if (user) {
 //           res.render("editAddress", {user,aData});
 //         } else {
@@ -119,7 +119,7 @@ const addNewaddress = async (req, res) => {
 //     } catch (error) {
 //       console.log(error.message);
 //     }
-    
+
 // }
 // const loadEditAddress =  async(req,res,next)=>{
 //     try {
@@ -127,17 +127,15 @@ const addNewaddress = async (req, res) => {
 //         const addressId = req.query.id;
 //         const addressData = await Address.findOne({ userId: userId ,"addresses._id":addressId})
 //         const aData = addressData.addresses.find((addr) => addr._id.toString()=== addressId);
-//         res.render("editAddress", { address: aData ,loggedIn :userId,addresses})       
+//         res.render("editAddress", { address: aData ,loggedIn :userId,addresses})
 //     } catch (error) {
 //         console.log(error.message);
 //         next(error);
 //     }
 // }
 
-
-
 module.exports = {
   loadAddress,
   loadAddaddress,
-  addNewaddress
+  addNewaddress,
 };
