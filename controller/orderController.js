@@ -6,7 +6,8 @@ const Address = require("../model/addressModel");
 const Razorpay = require("razorpay");
 const coupon = require("../model/couponModel");
 require("dotenv").config();
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 15;
+const itemsPerPage=10
 
 var instance = new Razorpay({
     key_id: "rzp_test_Lie7XPoiRsrtMV",
@@ -146,10 +147,19 @@ const adminOrderlist = async (req, res) => {
         const totalOrders = await Order.countDocuments(query);
         const totalPages = Math.ceil(totalOrders / itemsPerPage);
 
+        // const order = await Order.find(query)
+        //     .sort({ createdAt: -1 })
+        //     .skip((page - 1) * itemsPerPage)
+        //     .limit(itemsPerPage);
+
+        const ordersPerPage = itemsPerPage; // Rename 'itemsPerPage' for clarity
+        const skipAmount = (page - 1) * ordersPerPage;
+
         const order = await Order.find(query)
             .sort({ createdAt: -1 })
-            .skip((page - 1) * itemsPerPage)
-            .limit(itemsPerPage);
+            .skip(skipAmount)
+            .limit(ordersPerPage);
+
 
         if (order) {
             res.render("OrderList", {
@@ -158,7 +168,7 @@ const adminOrderlist = async (req, res) => {
                 status,
                 currentPage: page,
                 totalPages,
-                ITEMS_PER_PAGE,
+                itemsPerPage:ITEMS_PER_PAGE,
             });
         } else {
             res.render("./admin/orders", {
@@ -170,6 +180,62 @@ const adminOrderlist = async (req, res) => {
         console.log(error.message);
     }
 };
+
+
+
+//const SALES REPORT///////////////////////
+const salesReport = async (req, res) => {
+    try {
+        let { search, status, page, itemsPerPage, from, to } = req.query;
+        status="Delivered"
+        page = parseInt(page) || 1;
+        itemsPerPage = parseInt(itemsPerPage) || ITEMS_PER_PAGE;
+        
+        const query = {};
+
+        if (search) {
+            query._id = search;
+        }
+
+        if (status) {
+            query.status = status;
+        }
+
+        if (from && to) {
+            query.createdAt = { $gte: new Date(from), $lte: new Date(to) };
+        }
+
+        const totalOrders = await Order.countDocuments(query);
+        const totalPages = Math.ceil(totalOrders / itemsPerPage);
+
+        const order = await Order.find(query)
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * itemsPerPage)
+            .limit(itemsPerPage);
+
+        if (order) {
+            res.render("salesReport", {
+                orders: order,
+                search,
+                status,
+                currentPage: page,
+                totalPages,
+                ITEMS_PER_PAGE,
+                from,
+                to
+            });
+        } else {
+            res.render("./admin/salesReport", {
+                admin: admin,
+                message: "No order placed!!",
+            });
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
 const showOrderDetails = async (req, res, next) => {
     try {
         const orderId = req.query.id;
@@ -269,6 +335,63 @@ const cancelOrderadmin = async (req, res) => {
     }
 };
 
+// const returnOrder=async(req,res,next)=>
+// {
+//     // const id=req.query._id;
+//     const id=req.body.orderId
+//     const orderData=await Order.findById({_id:id})
+//     const productId = Product.productId;
+//     const count=Product.count
+//     if(orderData)
+//     {
+//         for (const product of orderData.products) {
+//             const productId = product.productId;
+//             const count = product.count;
+//             await Product.findByIdAndUpdate(productId, {
+//                 $inc: { quantity: count },
+//             });
+//         }
+//     await Order.findByIdAndUpdate({_id:id},{$set:{status:"returned"}})
+
+
+// }
+
+
+
+// }
+
+const returnOrder = async (req, res) => {
+    try {
+        const userId = req.session.user_id;
+        const orderId = req.body.orderId;
+        const orderData = await Order.findOne({ _id: orderId });
+        if (orderData) {
+            if (orderData.status == "Delivered" || orderData.status == "shipped") {
+                for (const product of orderData.products) {
+                    const productId = product.productId;
+                    const count = product.count;
+                    await Product.findByIdAndUpdate(productId, {
+                        $inc: { quantity: count },
+                    });
+                }
+                await Order.findByIdAndUpdate(orderId, {
+                    $set: { status: "returned" },
+                });
+                res.json({ success: true });
+            } else {
+                await Order.findByIdAndUpdate(orderId, {
+                    $set: { status: "returned" },
+                });
+                res.json({ success: true });
+            }
+        } else {
+            res.json({ success: false });
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
 const verifyPayment = async (req, res) => {
     try {
         const details = req.body;
@@ -328,4 +451,6 @@ module.exports = {
     cancelOrderadmin,
     verifyPayment,
     loadorderdetails,
+    salesReport,
+    returnOrder
 };

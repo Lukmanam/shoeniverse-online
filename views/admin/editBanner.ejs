@@ -1,0 +1,79 @@
+<%- include('../layouts/adminlayout/header.ejs') %>
+
+<main class="main-wrap">
+
+  <section class="content-main">
+    <div class="row">
+      <div class="col-6">
+        <div class="content-header">
+          <h2 class="content-title">Add New Banner</h2>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                <form action="/admin/editbanner?id=<%= bannerData._id %>" method="POST" enctype="multipart/form-data">
+
+              </div>
+              <div class="col-md-12">
+                <div class="mb-4">
+                  <label class="form-label" for="BannerImage">Banner Image<br></label>
+                  <input type="file" class="form-control" id="bannerImage" name="image" placeholder="Upload Banner Image" class="form-control" accept="image/*">
+                </div>
+                <div class="border border-info">
+                    <img src="/adminAsset/IMAGES/<%= bannerData.image %>"
+                        class="img-sm img-thumbnail" alt="item"><br>
+                </div>
+              
+                <div class="mb-4">
+                  <label class="form-label" for="title">Title</label>
+                  <input type="text" class="form-control" id="title" value="<%= bannerData.title %>" name="title" pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$" required>
+                </div>
+                <div class="mb-4">
+                  <label class="form-label" for="description">Description</label>
+                  <textarea class="form-control" name="description" id="description" cols="30" rows="10"> <%= bannerData.description %> </textarea>
+                </div>
+
+
+                <div class="button">
+                  <button class="btn btn-primary" type="submit" value="Save">Edit and Save</button>
+                </div>
+             
+                </form>
+            </div>
+        </div>
+        </div>
+      </div>
+  </section> <!-- content-main end// -->
+</main>
+<%- include("../layouts/adminlayout/footer.ejs") %>
+
+
+
+
+
+<script>
+  const fileInput = document.getElementById('bannerImage');
+  const allowedFormats = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
+
+  fileInput.addEventListener('change', function() {
+    const selectedFiles = Array.from(fileInput.files);
+    const invalidFiles = selectedFiles.filter(file => {
+      const fileExt = getFileExtension(file.name);
+      return !allowedFormats.includes(fileExt);
+    });
+
+    if (invalidFiles.length > 0) {
+      alert('Invalid file format. Only jpeg, jpg, png, gif, and webp files are allowed.');
+      fileInput.value = ''; // Clear the selected files to allow reselection
+    }
+  });
+
+  function getFileExtension(filename) {
+    return filename.split('.').pop().toLowerCase();
+  }
+</script>

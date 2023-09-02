@@ -12,7 +12,7 @@
                             <div class="mb-3">
                                 <label for="couponName" class="form-label">Coupon Name</label>
                                 <input type="text" class="form-control" id="couponName" name="couponName"
-                                    value="<%= coupon.couponName %>" required>
+                                    value="<%= coupon.couponName %>" pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$" required>
                             </div>
                             <div class="mb-3">
                                 <label for="couponType" class="form-label">Coupon Type</label>

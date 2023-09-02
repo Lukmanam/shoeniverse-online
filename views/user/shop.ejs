@@ -1,32 +1,10 @@
 <%- include('../layouts/userlayout/header.ejs') %>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
-
-	<!-- <div class="hero-wrap hero-bread"  style="background-image: url('images/bg_6.jpg');">
-		<div class="container">
-			<div class="row no-gutters slider-text align-items-center justify-content-center">
-				<div class="col-md-9 ftco-animate text-center">
-					<p class="breadcrumbs"><span class="mr-2"><a href="/">Home</a></span> <span>Shop</span></p>
-					<h1 class="mb-0 bread">Shop</h1>
-				</div>
-			</div>
-		</div>
-	</div> -->
-
 	<section class="ftco-section bg-light">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-8 col-lg-10 order-md-last">
 					<div class="search-form">
-						<!-- <div class="input-group">
-							<form action="/shop" method="get">
-						  <input type="text" class="form-control" id="searchInput" placeholder="Search...">
-						  <div class="input-group-append">
-							<button class="btn btn-primary" type="submit">
-							  <i class="icon-search"></i>
-							</button>
-						  </div>
-						  </form>
-						</div> -->
 						<div class="widget ltn__search-widget">
 							<h4 class="ltn__widget-title ltn__widget-title-border">Search Products</h4>
 							<form action="/shop" method="get" class="d-flex ">
@@ -44,31 +22,33 @@
 									<a href="/productDetails?id=<%= product._id %>" class="img-prod"><img
 											class="img-fluid" src="/adminAsset/IMAGES/<%= product.image[0] %>"
 											alt="Colorlib Template">
-										<!-- <span class="status">50% Off</span> -->
 										<div class="overlay"></div>
 									</a>
 									<div class="text py-3 pb-4 px-3 product">
 										<div class="d-flex">
 											<div class="cat">
 												<span>
-													<%= product.category.id.name %>
+													<%= product.category.name %>
 												</span>
-											</div>
-											<div class="rating">
-												<p class="text-right mb-0">
-													<a href="#"><span class="ion-ios-star-outline"></span></a>
-													<a href="#"><span class="ion-ios-star-outline"></span></a>
-													<a href="#"><span class="ion-ios-star-outline"></span></a>
-													<a href="#"><span class="ion-ios-star-outline"></span></a>
-													<a href="#"><span class="ion-ios-star-outline"></span></a>
-												</p>
 											</div>
 										</div>
 										<h3 class="product-name"><a href="/productDetails?id=<%= product._id %>">
 												<%= product.name %>
 											</a></h3>
 										<div class="pricing">
-											<p class="price"><span>₹<%= product.price %></span></p>
+											<% if ( product.offer){ var discount=(product.price *
+												product.offer.percentage / 100).toFixed(0) } else if (
+												product.category.offer ) {var discount=( product.price *
+												product.category.offer.percentage / 100 ).toFixed(0) } %>
+												<% if ( product.offer){%>
+													<p class="price"><span><del>₹<%= product.price %></del></span></p>
+													<h5 class="mb-0"> ₹ <%= product.price-discount %> <span
+																class="badge"
+																style="font-size: medium; background: linear-gradient(to right, rgb(246, 2, 2), #dd3838); color: white;">
+																Save ₹ <%= discount %> </span></h5>
+													<% } else{%>
+														<p class="price"><span>₹<%= product.price %></span></p>
+														<%}%>
 										</div>
 										<p class="bottom-area d-flex px-3">
 											<a href="/add" class="add-to-cart text-center py-2 mr-1"><span>Add to cart
@@ -80,25 +60,6 @@
 								</div>
 							</div>
 							<%}) %>
-								<!-- <div class="row mt-5">
-								<div class="col text-center">
-								  <div class="block-27">
-									<ul>
-									  <li><a href="#">&lt;</a></li>
-									  <li class="active"><span>1</span></li>
-									  <li><a href="#">2</a></li>
-									  <li><a href="#">3</a></li>
-									  <li><a href="#">4</a></li>
-									  <li><a href="#">5</a></li>
-									  <li><a href="#">&gt;</a></li>
-									</ul>
-								  </div>
-								</div>
-							  </div> -->
-
-
-
-
 					</div>
 					<div class="row mt-5">
 						<div class="col text-center">
@@ -106,12 +67,10 @@
 								<div class="ltn__pagination-area text-center">
 									<div class="ltn__pagination">
 										<ul class="d-flex " style="list-style-type:none;">
-
 											<% for(i=0;i<totalPage;i++){ %>
 												&nbsp;&nbsp;
 												<% if(i+1==page) { %>
 													<!-- <li><a href="#" class="active"><i class="fas fa-angle-double-left"></i></a></li> -->
-
 													<li><a href="/shop?page=<%= i+1 %>&value=<%= price %>&category=<%= cat %>&search=<%= Search %>"
 															class="active">
 															<%= i+1 %>
@@ -125,96 +84,62 @@
 															<% } %>
 																<!-- <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li> -->
 										</ul>
-
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-
 				<div class="col-md-4 col-lg-2">
 					<div class="sidebar">
 						<div class="sidebar-box-2">
 							<h2 class="heading">Categories</h2>
-							<div class="fancy-collapse-panel">
-								<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-									<% category.forEach(function(category) {%>
-										<div class="panel panel-default">
-											<div>
-												<h7 class="panel">
-
-													<a href="/shop?category=<%= category._id %>">
+							<div class="accordion" id="accordionCategories">
+								<% category.forEach(function(category, index) { %>
+									<div class="card">
+										<div class="card-header" id="categoryHeading<%= index %>">
+											<h5 class="mb-0">
+												<a href="/shop?category=<%=category._id  %>" class="btn btn-brand"
+													data-toggle="" data-target="#categoryCollapse<%= index %>"
+													aria-expanded="true" aria-controls="categoryCollapse<%= index %>">
+													<strong>
 														<%= category.name %>
-													</a>
-													</a>
-													</h4>
-											</div>
-											<div id="collapseOne" class="panel-collapse collapse" role="tabpanel"
-												aria-labelledby="headingOne">
-
+													</strong>
+												</a>
+											</h5>
+										</div>
+										<div id="categoryCollapse<%= index %>" class="collapse"
+											aria-labelledby="categoryHeading<%= index %>"
+											data-parent="#accordionCategories">
+											<div class="card-body">
 											</div>
 										</div>
-										<%}) %>
-								</div>
+									</div>
+									<% }) %>
 							</div>
 						</div>
-
 					</div>
 					<div class="sidebar">
 					</div>
 					<div class="sidebar-box-2">
-						<h2 class="heading">Price Range</h2>
-						<form method="post" class="colorlib-form-2">
+						<h2 class="heading">SORT PRICE </h2>
 							<div class="row">
 								<div class="col-md-12">
-									<div class="form-group">
-										<label for="guests">Price from:</label>
-										<div class="form-field">
-											<i class="icon icon-arrow-down3"></i>
-											<select name="people" id="people" class="form-control">
-												<option value="#">1</option>
-												<option value="#">200</option>
-												<option value="#">300</option>
-												<option value="#">400</option>
-												<option value="#">1000</option>
-											</select>
-										</div>
-									</div>
+										<select class="form-select nice-select" name="price" id="price"
+											onchange="location.href = '/shop?value=' + this.value + '&category=<%= cat %>&search=<%= Search %>'">
+											<% if(price==="High" ){ %>
+												<option value="Low">Price:low to high</option>
+												<option value="High" selected>Price:high to low</option>
+												<% } else { %>
+													<option value="Low" selected>Price:low to high</option>
+													<option value="High">Price :high to low</option>
+													<% } %>
+			
+										</select>
+									
 								</div>
-								<div class="col-md-12">
-									<div class="form-group">
-										<label for="guests">Price to:</label>
-										<div class="form-field">
-											<i class="icon icon-arrow-down3"></i>
-											<select name="people" id="people" class="form-control">
-												<option value="#">2000</option>
-												<option value="#">4000</option>
-												<option value="#">6000</option>
-												<option value="#">8000</option>
-												<option value="#">10000</option>
-											</select>
-										</div>
-									</div>
-								</div>
-							</div>
-						</form>
-						<div class="short-by text-center">
-							<select class="nice-select" name="price" id="price"
-								onchange="location.href = '/shop?value=' + this.value + '&category=<%= cat %>&search=<%= Search %>'">
-								<!-- <option>Default Sorting</option>
-								<option>Sort by popularity</option>
-								<option>Sort by new arrivals</option> -->
-								<% if(price==="High" ){ %>
-									<option value="Low">Price:low to high</option>
-									<option value="High" selected>Price:high to low</option>
-									<% } else { %>
-										- <option value="Low" selected>price:low to high</option>
-										<option value="High">Price :high to low</option>
-										<% } %>
+					
 
-							</select>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -356,11 +281,6 @@
 				}
 			}
 		}
-
-
-
-
-
 	</script>
 
 

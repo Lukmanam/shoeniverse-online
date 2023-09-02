@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const productDB = require("../model/productModel");
 const categoryDB = require("../model/categorymodel");
 const addressDB = require("../model/addressModel");
+const BannerDB = require("../model/bannerModel");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const { use } = require("../router/userRouter");
@@ -11,8 +12,6 @@ let otp;
 let email2;
 let emailreg;
 let name2;
-
-
 
 //SEND VERIFY EMAIL////////////////////////////////
 const sendVerifymail = async (email, otp) => {
@@ -46,8 +45,6 @@ const sendVerifymail = async (email, otp) => {
     console.log(error.message);
   }
 };
-
-
 
 //SENDLOGIN MAIL//////////////////////////////////////
 const sendLoginmail = async (email, otp) => {
@@ -84,9 +81,6 @@ const sendLoginmail = async (email, otp) => {
   }
 };
 
-
-
-
 //OTP VALIDATION FOR REGISTRATION///////////////////////
 const otpValidation = async (req, res) => {
   try {
@@ -105,7 +99,7 @@ const otpValidation = async (req, res) => {
         email2,
         messageS: "Successfully Verified.please Login.",
       });
-    } else {  
+    } else {
       res.render("onetimepasswordreg", {
         message: "invalid otp",
         inputEmail: email,
@@ -119,9 +113,6 @@ const otpValidation = async (req, res) => {
   }
 };
 
-
-
-
 //function password hash////////////////////
 const securePassword = async (password) => {
   try {
@@ -131,8 +122,6 @@ const securePassword = async (password) => {
     console.log(error.message);
   }
 };
-
-
 
 // INSERTION OR SIGNUP OF NEW USER///////////////
 const insertUser = async (req, res) => {
@@ -158,7 +147,6 @@ const insertUser = async (req, res) => {
 
       const userData = await user.save();
       if (userData) {
-
         //GENERATE A RANDOM OTP
         const otpgenerated = Math.floor(1000 + Math.random() * 999);
         otp = otpgenerated;
@@ -176,8 +164,6 @@ const insertUser = async (req, res) => {
   }
 };
 
-
-
 //LOAD LOGIN PAGE////////////////////////////
 const loadLogin = async (req, res) => {
   try {
@@ -187,8 +173,6 @@ const loadLogin = async (req, res) => {
     console.log(error.message);
   }
 };
-
-
 
 //VERIFY LOGIN///////////////////////////////
 const verifyLogin = async (req, res) => {
@@ -220,8 +204,6 @@ const verifyLogin = async (req, res) => {
   }
 };
 
-
-
 //LOAD SIGNUP PAGE////////////////////////////////
 const loadsignup = async (req, res) => {
   try {
@@ -231,20 +213,19 @@ const loadsignup = async (req, res) => {
   }
 };
 
-
-
 //LOAD SHOP PAGE//INCLUDES SEARCH SORT AND PAGINATION////////////////////////////////////
 const loadshop = async (req, res) => {
   try {
+  
     const user = req.session.user_id;
     const product = await productDB.find({ blocked: false });
     const category = await categoryDB.find({ blocked: false });
     const page = Number(req.query.page) || 1;
-    const limit = 6;
+    const limit = 12;
     const skip = (page - 1) * limit;
 
     let price = req.query.value;
-    let categoryy = req.query.category || "All";
+    let categoryy = req.query.category || category;
     let Search = req.query.search || "";
     Search = Search.trim();
 
@@ -256,31 +237,27 @@ const loadshop = async (req, res) => {
       cat[i] = category[i].name;
     }
 
-    // let sort ;
-    // categoryy === "All" ? categoryy = [...cat] : categoryy = req.query.category.split(',');
-    // req.query.value === "High" ? sort = -1 : sort = 1;
+    let sort;
+    // categoryy === "All"
+    //   ? (categoryy = [...cat])
+    //   : (categoryy = req.query.category.split(" "));
+    req.query.value === "High" ? (sort = -1) : (sort = 1);
 
-    // const producData =
-    // await productDB.aggregate([
-    //     {$match : {name : {$regex:'^'+Search, $options : 'i'},category: categoryy},blocked : false},
-    //     // {$sort : {price : sort}},
-    //     {$skip : skip},
-    //     {$limit : limit}
-    // ]);
-
-
-    //SEARCH//////////////////////////////////////
-    const producData = await productDB.aggregate([
-      {
+    const producData = await productDB
+      .find({
+        name: { $regex: "^" + Search, $options: "i" },
+        category: categoryy,
+        blocked: false,
+      })
+      .skip(skip)
+      .limit(limit).sort({sort})
+      .populate({
+        path: "offer",
         $match: {
-          name: { $regex: "^" + Search, $options: "i" },
-          // category: categoryy,
-          blocked: false,
+          startingDate: { $lte: new Date() },
+          expiryDate: { $gte: new Date() },
         },
-      },
-      { $skip: skip },
-      { $limit: limit },
-    ]);
+      });
     console.log("Product Data After Search", producData);
 
     const productCount = await productDB.countDocuments({
@@ -324,8 +301,6 @@ const loadshop = async (req, res) => {
   }
 };
 
-
-
 //CONTACT PAGE////////////////////////////
 const loadcontact = async (req, res) => {
   try {
@@ -335,8 +310,6 @@ const loadcontact = async (req, res) => {
     console.log(error.message);
   }
 };
-
-
 
 //LOAD ABOUT PAGE/////////////////////////
 const loadabout = async (req, res) => {
@@ -348,22 +321,26 @@ const loadabout = async (req, res) => {
   }
 };
 
-
-
 //LOAD HOME PAGE////////////////////////////
 const loadhome = async (req, res) => {
   try {
     const user = req.session.user_id;
     console.log(user, "this is home session");
-
-    const product = await productDB.find({ blocked: false });
-    res.render("home", { product, user });
+    const bannerData = await BannerDB.find();
+    const product = await productDB
+      .find({ blocked: false })
+      .populate({
+        path: "offer",
+        $match: {
+          startingDate: { $lte: new Date() },
+          expiryDate: { $gte: new Date() },
+        },
+      });
+    res.render("home", { product, user, bannerData });
   } catch (error) {
     console.log(error.message);
   }
 };
-
-
 
 //LOAD WISHLIST PAGE////////////////////////
 const loadwishlist = async (req, res) => {
@@ -374,8 +351,6 @@ const loadwishlist = async (req, res) => {
     console.log(error.message);
   }
 };
-
-
 
 //FUNCTION USERLOGOUT/////////////////////////////////
 const userLogout = async (req, res) => {
@@ -391,8 +366,6 @@ const userLogout = async (req, res) => {
   }
 };
 
-
-
 //RESEND OTP FOR FORGOTPASSWORD///////////////////////////
 const resendOTPlogin = async (req, res) => {
   try {
@@ -406,8 +379,6 @@ const resendOTPlogin = async (req, res) => {
     console.log(error.message);
   }
 };
-
-
 
 //RESEND OTP FOR USER REGISTRATION/////////////////////
 const resendOTPreg = async (req, res) => {
@@ -423,8 +394,6 @@ const resendOTPreg = async (req, res) => {
   }
 };
 
-
-
 //USER PROFILE///////////////////////////////////////////
 const loadprofile = async (req, res) => {
   try {
@@ -438,9 +407,7 @@ const loadprofile = async (req, res) => {
   }
 };
 
-
-
-//LOAD CHANGE PASSWORD PAGE///////////////////////// 
+//LOAD CHANGE PASSWORD PAGE/////////////////////////
 const loadchangePassword = async (req, res) => {
   try {
     const user = req.session.user_id;
@@ -451,8 +418,6 @@ const loadchangePassword = async (req, res) => {
     console.log(error.message);
   }
 };
-
-
 
 //CHANGE PASSWORD FUNCTION ON USER PROFILE//////////////////////
 const changePassword = async (req, res) => {
@@ -491,8 +456,6 @@ const changePassword = async (req, res) => {
   }
 };
 
-
-
 //LOAD EDIT PROFILE PAGE//////////////////////////////
 const loadEditProfile = async (req, res) => {
   try {
@@ -503,8 +466,6 @@ const loadEditProfile = async (req, res) => {
     console.log(error.message);
   }
 };
-
-
 
 //EDIT PROFILE FUNCTION////////////////////////////////////
 
@@ -524,33 +485,28 @@ const editProfile = async (req, res) => {
   }
 };
 
-
-
 // FORGET PASSWORD/////////////////////////////////////////////
 const loadforgotPassword = async (req, res) => {
   try {
-
     res.render("forgotPassword");
   } catch (error) {
     console.log(error.message);
   }
 };
 
-
-
 //forget password function////with OTP////////////////////////////////////////////////
 
 const forgotPassword = async (req, res) => {
   try {
-    console.log(req.session.user_id,"THIS IS THE SESSION")
+    console.log(req.session.user_id, "THIS IS THE SESSION");
     const email = req.body.email;
-    const inputEmail = email
+    const inputEmail = email;
     const userprofile = await UserDB.findOne({ email: email });
-   
+
     if (userprofile) {
       const otpgenerated = Math.floor(1000 + Math.random() * 999);
       otp = otpgenerated;
-     
+
       sendLoginmail(email, otpgenerated);
       res.render("onetimepassword", { email, otpgenerated, inputEmail });
     } else {
@@ -561,9 +517,6 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-
-
-
 // OTPVALIDATION FOR FORGORPASSWORD/////////////////////////
 const otpValidationlogin = async (req, res) => {
   try {
@@ -572,13 +525,13 @@ const otpValidationlogin = async (req, res) => {
     const email = req.body.email;
 
     if (otpinput == otp) {
-    //   const userData = await UserDB.findOne({ email: email });
-    //   await UserDB.findOneAndUpdate(
-    //     { email: email },
-    //     { $set: { is_verified: 1 } }
-    //   );
+      //   const userData = await UserDB.findOne({ email: email });
+      //   await UserDB.findOneAndUpdate(
+      //     { email: email },
+      //     { $set: { is_verified: 1 } }
+      //   );
       // req.session.user_id = userData._id;
-console.log('otp Verified');
+      console.log("otp Verified");
       res.redirect(`/changeforgotPassword?email=${email}`);
     } else {
       res.render("onetimepassword", {
@@ -594,69 +547,65 @@ console.log('otp Verified');
   }
 };
 
-
 //loadchangeforgotPassword///////////////////////////////
 const loadchangeforgotPassword = async (req, res) => {
   try {
-   
-    const email = req.query.email
+    const email = req.query.email;
 
-    console.log(email,"this is the emailer when loading the page");
-    res.render('changeforgotPassword', { email })
+    console.log(email, "this is the emailer when loading the page");
+    res.render("changeforgotPassword", { email });
     console.log("email when rendered");
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error.message);
   }
-}
-
-
+};
 
 // CHANGE FORGOT PASSWORD TO NEW PASSWORD////////////////////
 const changeForgotPassword = async (req, res) => {
   try {
-    const email=req.body.email
-    const userData=await UserDB.findOne({email:email})
-    if(userData)
-    { 
-    const newPassword=req.body.newPassword
-    const confirmNewPassword=req.body.confirmNewPassword
-    const passwordMatch=newPassword===confirmNewPassword
-    if(passwordMatch)
-    {
-    const isLengthValid = newPassword.length >= 8;
-    const hasUpperCase = /[A-Z]/.test(newPassword);
-    const hasLowerCase = /[a-z]/.test(newPassword);
-    const hasDigit = /[0-9]/.test(newPassword);
-    const hasSpecialChar = /[!@#$%^&*()\-_=+{}[\]|;:'",.<>/?]/.test(newPassword);
-    const passwordvalidated=isLengthValid && hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar;
-     if(passwordvalidated)
-      {
-      const hashedNewPassword=bcrypt.hashSync(newPassword,10)
-      userData.password=hashedNewPassword;
-      await userData.save();
-      res.render("login",{messageS:"Password Reset Successfully,Please Login",})
+    const email = req.body.email;
+    const userData = await UserDB.findOne({ email: email });
+    if (userData) {
+      const newPassword = req.body.newPassword;
+      const confirmNewPassword = req.body.confirmNewPassword;
+      const passwordMatch = newPassword === confirmNewPassword;
+      if (passwordMatch) {
+        const isLengthValid = newPassword.length >= 8;
+        const hasUpperCase = /[A-Z]/.test(newPassword);
+        const hasLowerCase = /[a-z]/.test(newPassword);
+        const hasDigit = /[0-9]/.test(newPassword);
+        const hasSpecialChar = /[!@#$%^&*()\-_=+{}[\]|;:'",.<>/?]/.test(
+          newPassword
+        );
+        const passwordvalidated =
+          isLengthValid &&
+          hasUpperCase &&
+          hasLowerCase &&
+          hasDigit &&
+          hasSpecialChar;
+        if (passwordvalidated) {
+          const hashedNewPassword = bcrypt.hashSync(newPassword, 10);
+          userData.password = hashedNewPassword;
+          await userData.save();
+          res.render("login", {
+            messageS: "Password Reset Successfully,Please Login",
+          });
+        } else {
+          return res.redirect(
+            `/changeforgotPassword?passwordvalidated=false&&email=${req.body.email}`
+          );
+        }
+      } else {
+        return res.redirect(
+          `/changeforgotPassword?passwordMismatch=true&&email=${req.body.email}`
+        );
       }
-      else
-      {
-        return res.redirect(`/changeforgotPassword?passwordvalidated=false&&email=${req.body.email}`);
-      }
-      
     }
-    else  
-    {
-      return res.redirect(`/changeforgotPassword?passwordMismatch=true&&email=${req.body.email}`);
-    }
-    }
-    
-
   } catch (error) {
     console.error(error);
-    res.redirect("/changeforgotPassword")
+    res.redirect("/changeforgotPassword");
   }
-}
-
-
+};
 
 module.exports = {
   loadLogin,
@@ -684,5 +633,5 @@ module.exports = {
   loadforgotPassword,
   forgotPassword,
   loadchangeforgotPassword,
-  changeForgotPassword
+  changeForgotPassword,
 };

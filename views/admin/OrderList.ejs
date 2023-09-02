@@ -10,35 +10,36 @@
                         <h2 class="content-title card-title">Order List</h2>
                         <p>Total Orders </p>
                     </div>
-                    
+<!--                     
                     <div>
                         <button href="#" class="btn btn-light rounded font-md" onclick="generateExcel()">Excel</button>
                         <button class="btn btn-light rounded font-md" onclick="generatePDF()">PDF Download</button>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="card mb-4">
                     <header class="card-header">
-                        <div class="row gx-3">
+                        <div class="row gx-3 ">
                             <div class="col-lg-4 col-md-6 me-auto">
-                                <form action="/admin/adminOrderlist" method="GET">
+                                <form action="/admin/adminOrderlist" method="GET" class="d-flex">
                                     <input type="text" name="search" placeholder="Search..." class="form-control" value="<%= search || '' %>">
-                                    <button type="submit" class="btn btn-sm font-sm rounded btn-brand mt-3">Search</button>
+                                    <button type="submit" class="btn btn-sm font-sm rounded btn-brand ">Search</button>
                                 </form>
                             </div>
-                            <div class="col-lg-2 col-md-3 col-6">
-                                <form action="/admin/adminOrderlist" method="GET">
+                            <div class="col-lg-2   ">
+                                <form action="/admin/adminOrderlist" method="GET"class= "d-flex" >
                                     <select class="form-select" name="status">
-                                        <option>Choose</option>
+                                        <option value="">Show all</option>
                                         <option value="placed"<%= status === 'placed' ? 'selected' : '' %>>Placed</option>
-                                        <option value="delivered" <%= status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+                                        <option value="Delivered" <%= status === 'delivered' ? 'selected' : '' %>>Delivered</option>
                                         <option value="Cancelled"<%= status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
                                         <option value="Shipped"<%= status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
-                                        <option value="">Show all</option>
+                                        <option value="returned"<%= status === 'Returned' ? 'selected' : '' %>>Returned</option>
+                                        <option value="pending"<%= status === 'pending' ? 'selected' : '' %>>Pending</option>
                                     </select>
-                                    <button type="submit" class="btn btn-sm font-sm rounded btn-brand mt-3">Filter</button>
+                                    <button type="submit" class="btn btn-sm font-sm rounded btn-brand mt-0">Filter</button>
                                 </form>
                             </div>
-                            <div class="col-lg-2 col-md-3 col-6">
+                            <!-- <div class="col-lg-2 col-md-3 col-6">
                                 <form action="/admin/adminOrderlist" method="GET">
                                     <select class="form-select" name="itemsPerPage">
                                         <option value="10">Show 10</option>
@@ -47,7 +48,7 @@
                                     </select>
                                     <button type="submit" class="btn btn-sm font-sm rounded btn-brand mt-3">Apply</button>
                                 </form>
-                            </div>
+                            </div> -->
                         </div>
                         </div>
                     </header>
@@ -68,6 +69,12 @@
 
                                     </tr>
                                 </thead>
+                                <% if (orders.length === 0) { %>
+                                    <!-- Display "No orders found" message when there are no results -->
+                                    <tr>
+                                        <td colspan="6">No orders found</td>
+                                    </tr>
+                                <%}%>
                                 <tbody>
                                     <% orders.forEach(orders=>{ %>                                    
                                     <tr>
@@ -105,7 +112,7 @@
                                                     </button>
                                                 <% } else { %>
                                                     <button class="btn-secondary btn-sm " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <%= order.status %>
+                                                        <%= orders.status %>
                                                     </button>
                                                 <% } %>
                                         </div></td>
@@ -113,15 +120,7 @@
                                             <%= orders.paymentMethod  %></td>
                                         <td>
                                             <a href="/admin/orderDetails?id=<%= orders._id %>" class="btn btn-md rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
+                                           
                                         </td>
                                     </tr>
                                     
@@ -134,7 +133,7 @@
                     <!-- card-body end// -->
                 </div>
                 <!-- card end// -->
-                <div class="pagination-area mt-15 mb-50">
+                <!-- <div class="pagination-area mt-15 mb-50">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
                             <li class="page-item active"><a class="page-link" href="#">01</a></li>
@@ -144,6 +143,22 @@
                             <li class="page-item"><a class="page-link" href="#">16</a></li>
                             <li class="page-item">
                                 <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div> -->
+                <div class="pagination-area mt-15 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link" href="?page=<%= i %>&search=<%= search %>&status=<%= status %>&itemsPerPage=<%= itemsPerPage %>"><%= i %></a>
+                                </li>
+                            <% } %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPage + 1 %>">
+                                    <i class="material-icons md-chevron_right"></i>
+                                </a>
                             </li>
                         </ul>
                     </nav>

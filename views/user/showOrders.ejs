@@ -55,10 +55,10 @@
                 </td>
                 <td>
                   <% if (order.status=="Delivered" ) { %>
-                  <div>
-                    <a href="/returnOrder?id=<%= order._id %>"><button class="font-sm btn-danger btn-sm">
-                        Return
-                      </button></a>
+                    <div>
+                    <button class="btn-sm font-sm btn-danger" onclick="confirmReturn('<%= order._id %>')">
+                      Return
+                    </button>
                   </div>
                   <% }else if(order.status=="Cancelled" ) {%>
                   <div>
@@ -66,7 +66,7 @@
                       Cancelled
                     </button>
                   </div>
-                  <% }else if(order.status=="Returned" ) {%>
+                  <% }else if(order.status=="returned" ) {%>
                   <div>
                     <button class="btn-sm font-sm btn-secondary" disabled>
                       Returned
@@ -74,7 +74,7 @@
                   </div>
                   <% } else { %>
                   <div>
-                    <button class="btn-sm font-sm btn-danger" onclick="cancel('<%= order._id %>')">
+                    <button class="btn-sm font-sm btn-danger" onclick="confirmCancel('<%= order._id %>')">
                       Cancel
                     </button>
                   </div>
@@ -98,9 +98,39 @@
   </div>
 </section>
 
+
 <script>
+  function confirmCancel(orderId)
+  {
+    swal.fire({
+      title: 'Are you sure?',
+            text: "You Want to Cancel this Order?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!'
+    
+  })
+  .then((result) => {
+            if (result.isConfirmed) {
+				Swal.fire(
+					'Cancelled!',
+					'Order has been Cancelled.',
+					'success'
+					)
+					cancel(orderId)
+				}
+				setTimeout(()=>{
+
+					window.location.reload();
+				},1000)
+			});
+  }
+
+
   function cancel(orderId) {
-    if (confirm("Are you sure you want to cancel this order?")) {
+     
       $.ajax({
         url: "/cancelOrder",
         data: {
@@ -119,7 +149,59 @@
         },
       });
     }
+  
+
+  function confirmReturn(orderId)
+  {
+    swal.fire({
+      title: 'Are you sure?',
+            text: "You Want to Return this Order?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!'
+    
+  })
+  .then((result) => {
+            if (result.isConfirmed) {
+				Swal.fire(
+					'Return Confirmed!',
+					'Order has been Returned.',
+					'success'
+					)
+					returnOrder(orderId)
+				}
+				setTimeout(()=>{
+
+					window.location.reload();
+				},1000)
+			});
   }
-</script>
+  </script>
+<script>
+  
+ function returnOrder(orderId)
+  {
+     
+     $.ajax({
+       url: "/returnOrder",
+       data: {
+         orderId: orderId,
+       },
+       method: "post",
+       success: (response) => {
+         if (response.success) {
+           toastr.success("Order Returned successfully!", "Success", {
+             timeOut: 3000,
+             closeButton: true,
+             progressBar: true,
+           });
+           location.reload();
+         }
+       },
+     });
+   }
+  </script>
 
 <%- include('../layouts/userlayout/footer.ejs') %>

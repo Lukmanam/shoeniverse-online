@@ -165,8 +165,8 @@
 								<input type="text" name="cart-coupon" placeholder="Coupon code" id="code">
 								<button type="submit" class="btn theme-btn-2 btn-effect-2 btn-primary">Apply
 									Coupon</button>
-								<!-- <p>Available Coupons..? <a href="#" id="show-coupons-link" data-bs-toggle="modal"
-                            data-bs-target="#couponsModal">Click Here</a></p> -->
+								<p>Available Coupons..? <a href="#" id="show-coupons-link" data-bs-toggle="modal"
+										data-bs-target="#couponsModal">Click Here</a></p>
 							</div>
 						</form>
 					</div>
@@ -183,7 +183,7 @@
 							<div class="modal-body">
 								<% coupon.forEach(coupon=>{ %>
 									<ul>
-										<% if(coupon.discountType=="Fixed Amount" ){ %>
+										<% if(coupon.discountType=="fixed" ){ %>
 											<li>
 												<%=coupon.couponName %>: ₹<%=coupon.discountAmount %> off
 											</li>
@@ -210,16 +210,16 @@
 	</section> <!-- .section -->
 
 
+	<script>
+		var myModal = new bootstrap.Modal(document.getElementById('couponsModal'));
+	</script>
+
 
 	<script>
 
 		$("#checkout-form").submit((e) => {
 
 			e.preventDefault();
-			console.log("submit button Clicked");
-			console.log("set");
-
-			console.log("Order kurach working aan");
 			const amount = document.getElementById("total").innerHTML;
 			const totalAmount = document.getElementById("grandtotal").innerHTML;
 			let address = $("input[name=selectAddress]:checked").val();
@@ -332,24 +332,52 @@
 				success: (response) => {
 					console.log(response);
 					if (response.user) {
-						alert("Oops! This user has already used this coupon");
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops...',
+							text: 'Coupon Already Used!',
+
+						})
 					} else if (response.status) {
-						alert("Oops! This coupon is not in use");
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops...',
+							text: 'This Coupon is not in use!',
+
+						})
 					} else if (response.cartAmount) {
-						alert("Oops! You can't use the coupon... Buy more");
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops...',
+							text: 'Please meet Minimum Cart Amount!',
+
+						})	
 					} else if (response.date) {
-						console.log("Oops! Coupon date expired");
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops...',
+							text: 'Coupon Date Expired!',
+
+						})
 					} else if (response.amountKey) {
 						console.log(response.disTotal, "distotal");
 						document.getElementById('discountAmount').innerText = response.discAmount;
 						document.getElementById('newTotal').innerHTML = response.disTotal;
-						alert("Coupon Applied")
+
+						Swal.fire(
+							'Applied!',
+							'Coupon Applied!.',
+							'success'
+						)
 					} else if (response.invalid) {
-						alert("Oops! Invalid coupon");
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops...',
+							text: 'Invalid Coupon!',
+
+						})
 					}
-					else {
-						console.log("hai");
-					}
+					
 				}
 			});
 		});

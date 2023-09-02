@@ -1,6 +1,7 @@
 const productDB = require("../model/productModel");
 const UserDB = require("../model/usermodel");
 const categoryDB = require("../model/categorymodel");
+const offerDB=require('../model/offerModel')
 const productController = require("../controller/productController");
 const fs = require("fs");
 const path = require("path");
@@ -23,11 +24,19 @@ const loadproductlist = async (req, res) => {
 
     // If a search term is provided, add it to the query object to filter the products
     if (searchTerm) {
-      query = { $text: { $search: searchTerm } };
+      const searchRegex = new RegExp(searchTerm, 'i');
+      query = {
+        $or: [
+            { name: searchRegex },
+            { description: searchRegex },
+            // Add more fields to search as needed
+        ],
+    };
     }
 
     const product = await productDB.find(query).populate("category");
-    res.render("productList", { product, searchTerm });
+    const availableOffers=await offerDB.find({status:true,expiryDate:{$gte:new Date()}})
+    res.render("productList", { product, searchTerm,availableOffers });
   } catch (error) {
     console.log(error.message);
   }
@@ -182,7 +191,10 @@ const loadProductDetail = async (req, res) => {
   try {
     const user = req.session.user_id;
     const id = req.query.id;
-    const product = await productDB.findById({ _id: id });
+    const product = await productDB.findById({ _id: id }).populate({
+      path : 'offer',
+      $match :  { startingDate : { $lte : new Date() }, expiryDate : { $gte : new Date() }}
+  })
     console.log(product, "OKKK");
     res.render("productDetails", { product, user });
   } catch (error) {
@@ -225,6 +237,35 @@ const deleteImage = async (req, res) => {
   }
 };
 
+const applyProductOffer=async(req,res,next)=>{
+  try {
+    const {offerId,productId}=req.body
+      await productDB.updateOne({_id:productId},{
+        $set:{
+          offer:offerId
+        }
+      })
+      res.json({success:true})
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+const removeProductOffer=async(req,res,next)=>{
+  try {
+    console.log("removing product offer");
+    const {productId}=req.body
+    await productDB.updateOne({_id:productId},{
+      $unset:{offer:""}})
+      console.log("removed");
+      res.json({success:true})
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   loadproductlist,
   loadaddProduct,
@@ -234,4 +275,7 @@ module.exports = {
   unlistProduct,
   loadProductDetail,
   deleteImage,
+  applyProductOffer,
+  removeProductOffer
+
 };

@@ -26,6 +26,7 @@
                   id="productName"
                   name="name"
                   value="<%= catData.name %>"
+                  pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$"
                   required
                 />
               </div>
@@ -39,6 +40,7 @@
                   class="form-control"
                   id="description"
                   name="description"
+                  pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$"
                   value="<%= catData.description %>"
                 />
               </div>

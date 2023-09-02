@@ -1,0 +1,64 @@
+<%- include("../layouts/adminlayout/header.ejs") %>
+
+<body>
+  <main class="main-wrap">
+    <section class="content-main">
+      <div class="content-header">
+        <div>
+          <h2 class="content-title card-title">Banners</h2>
+        </div>
+        <div>
+          <a href="/admin/addBanner" class="btn btn-primary btn-sm rounded"
+            >Add new Banner</a
+          >
+        </div>
+      </div>
+      <div class="card mb-4">
+        <header class="card-header">
+          <% if(banners.length>0) { %>
+
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Image</th>
+                  <th scope="col">Info</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <% banners.forEach(banner=>{ %>
+
+                  <td>
+                    <img
+                      src="/adminAsset/IMAGES/<%= banner.image %>"
+                      class="img-sm img-thumbnail"
+                      alt=""
+                    />
+                  </td>
+                  <td><%= banner.info %></td>
+                  <td><%= banner.title %></td>
+                  <td><%= banner.description %></td>
+                  <td class="action-buttons">
+                    <div class="d-flex gap-2">
+                      
+                    <a href="/admin/deleteBanner?id=<%= banner._id %>" class="btn btn-danger ">Delete</a>
+                    <a href="/admin/editBanner?id=<%=banner._id%>" class="btn btn-facebook "><p> Edit </p>  </a>
+                  </div>
+                  </td>
+                </tr>
+                <%}) %>
+              </tbody>
+            </table>
+            <% }else{%>
+            <p>No Banners Available</p>
+            <% } %> <%- include("../layouts/adminlayout/footer.ejs") %>
+          </div>
+        </header>
+      </div>
+    </section>
+  </main>
+</body>

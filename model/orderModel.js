@@ -53,6 +53,12 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
     },
+    returnReason:{
+      type:String
+    },
+    cancelReason:{
+      type:String
+    }
   },
   { timestamps: true }
 );

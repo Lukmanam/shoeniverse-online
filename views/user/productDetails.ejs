@@ -1,24 +1,38 @@
 <%- include('../layouts/userlayout/header.ejs') %>
 
-
+<style>
+	.imagezoom img{
+		position: relative;
+		width: 100%;
+		height: 100%;
+		-o-object-fit: cover;
+		object-fit: cover;
+		transform: scale(var(--zoom,1));
+		transform-origin: var(--x) var(--y);
+		transition: transform 0.3s ease;
+	}
+	.imagezoom:hover{
+		--zoom:2;
+	}
+</style>
 	<section class="ftco-section">
-		<div class="container mt-5">
+		<div class="container">
 			<div class="row">
 				<div class="col-lg-6 mb-5 ftco-animate">
 					<div id="productCarousel" class="carousel slide" data-ride="carousel">
 						<div class="carousel-inner">
-							<div class="carousel-item active">
-								<a href="#" class="image-popup prod-img-bg">
-									<img src="adminAsset/IMAGES/<%= product.image[0] %>" class="img-fluid"
+							<div class="imagezoom carousel-item active">
+								<!-- <a href="#" class="imagezoom  prod-img-bg"> -->
+									<img src="adminAsset/IMAGES/<%= product.image[0] %>" class="img-fluid image mt-0"
 										alt="Colorlib Template">
-								</a>
+								<!-- </a> -->
 							</div>
 							<% for (let i=1; i < product.image.length; i++) { %>
-								<div class="carousel-item">
-									<a href="#" class="image-popup prod-img-bg">
+								<div class="imagezoom carousel-item">
+									<!-- <a href="#" class=" prod-img-bg"> -->
 										<img src="adminAsset/IMAGES/<%= product.image[i] %>" class="img-fluid"
 											alt="Colorlib Template">
-									</a>
+									<!-- </a> -->
 								</div>
 								<% } %>
 						</div>
@@ -59,23 +73,31 @@
 						<%= product.name %>
 					</h3>
 					<div class="rating d-flex">
-						<p class="text-left mr-4">
+						<!-- <p class="text-left mr-4">
 							<a href="#" class="mr-2">5.0</a>
 							<a href="#"><span class="ion-ios-star-outline"></span></a>
 							<a href="#"><span class="ion-ios-star-outline"></span></a>
 							<a href="#"><span class="ion-ios-star-outline"></span></a>
 							<a href="#"><span class="ion-ios-star-outline"></span></a>
 							<a href="#"><span class="ion-ios-star-outline"></span></a>
-						</p>
-						<p class="text-left mr-4">
+						</p> -->
+						<!-- <p class="text-left mr-4">
 							<a href="#" class="mr-2" style="color: #000;">100 <span
 									style="color: #bbb;">Rating</span></a>
 						</p>
 						<p class="text-left">
 							<a href="#" class="mr-2" style="color: #000;">500 <span style="color: #bbb;">Sold</span></a>
-						</p>
+						</p> -->
 					</div>
-					<p class="price"><span>₹<%= product.price %></span></p>
+					<% if(product.offer){var discount=(product.price * product.offer.percentage/100).toFixed(0)} %>
+					<% if(product.offer){ %>
+					<p class="price"><span><del>₹<%= product.price %></del></span></p>
+					<h3 class="price"> ₹ <%= product.price-discount %> <span class="badge" style="font-size: medium; background: linear-gradient(to right, rgb(246, 2, 2), #dd3838); color: white;"> Save ₹ <%= discount %> </span></h5>
+					<% }else{ %>
+						<p class="price"><span>₹<%= product.price %></span></p>
+						<% } %>
+					
+
 					<p>
 						<%= product.description %>
 					</p>
@@ -323,6 +345,25 @@
 				}
 			})
 		}
+	</script>
+	<script>
+		document.querySelectorAll('.imagezoom').forEach(elem =>{
+			let x,y,width,height;
+			elem.onmouseenter=()=>{
+				const size=elem.getBoundingClientRect();
+				x=size.x
+				y=size.y
+				width=size.width;
+				height=size.height;
+			};
+			elem.onmousemove = e =>{
+				const horizontal=(e.clientX-x)/width*100;
+				const vertical=(e.clientY-y)/height*100;
+
+				elem.style.setProperty('--x',horizontal + '%');
+				elem.style.setProperty('--y',vertical + '%');
+			};
+		});
 	</script>
 
 	</body>

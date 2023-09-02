@@ -54,12 +54,7 @@
                                             <a href="/admin/editCoupon?coupon=<%= coupon._id %>"
                                                 class="btn btn-sm font-sm rounded btn-brand"><i
                                                     class="material-icons md-edit"></i> Edit</a>
-                                            <button id="couponId<%= coupon.name %>"
-                                                class="btn btn-sm font-sm btn-light rounded"
-                                                onclick="toggleCouponStatus('<%= coupon.name %>')">
-                                                <% if (coupon.status==='active' ) { %> Deactivate <% } else if
-                                                        (coupon.status==='expired' ) { %> Reactivate <% } %>
-                                            </button>
+                                           
                                         </td>
                                     </tr>
                                     <% }) %>

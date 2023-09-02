@@ -13,6 +13,7 @@ const dashboardHelper = require("../helper/dashboardHelper");
 //LOAD DASHOARD////////////////////////////////////
 const loaddashboard = async (req, res) => {
   try {
+    const users=await UserDB.find().limit(3).skip(4)
     const productCount = await Product.count();
     const categoryCount = await category.count();
     const orderCount = await Order.count();
@@ -57,6 +58,7 @@ const loaddashboard = async (req, res) => {
     // }
 
     res.render("index", {
+      users,
       productCount,
       categoryCount,
       orderCount,

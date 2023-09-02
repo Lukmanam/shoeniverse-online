@@ -11,7 +11,7 @@
                         <form action="/admin/addCoupon" method="POST">
                             <div class="mb-3">
                                 <label for="couponName" class="form-label">Coupon Name</label>
-                                <input type="text" class="form-control" id="couponName" name="couponName" required>
+                                <input type="text" class="form-control" id="couponName" name="couponName" pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$" required>
                             </div>
                             <div class="mb-3">
                                 <label for="couponType" class="form-label">Coupon Type</label>
@@ -31,7 +31,7 @@
                                     required>
                             </div>
                             <div class="mb-3">
-                                <label for="expired" class="form-label">Expired</label>
+                                <label for="expired" class="form-label">Expire Date</label>
                                 <input type="date" class="form-control" id="expired" name="expired" required>
                             </div>
                             <div class="mb-3">
@@ -39,14 +39,14 @@
                                 <input type="number" class="form-control" id="maxDiscAmount" name="maxDiscAmount"
                                     required>
                             </div>
-
+<!-- 
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status</label>
                                 <select class="form-select" id="status" name="status" required>
                                     <option value="active">Active</option>
                                     <option value="expired">Expired</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <button type="submit" class="btn btn-primary">Add Coupon</button>
                         </form>
                     </div>

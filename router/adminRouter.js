@@ -9,6 +9,8 @@ const orderController = require('../controller/orderController')
 admin_route.use(session({ secret: config.sessionSecret }));
 const adminController = require('../controller/adminController');
 const couponController = require('../controller/couponController')
+const bannerController=require('../controller/BannerController')
+const offerController=require('../controller/offerController')
 // Assuming you have set up the route like this in your backend
 // app.get('/admin/productList', loadproductlist);
 
@@ -54,7 +56,7 @@ admin_route.patch('/unlistProduct', productController.unlistProduct)
 
 
 
-//SHOW ORDER LIST
+//SHOW ORDER LIST//////////////////////////////////////////////////////////////////////
 admin_route.get('/adminOrderlist', adminAuth.isLogin, orderController.adminOrderlist)
 admin_route.get('/orderDetails', adminAuth.isLogin, orderController.showOrderDetails)
 admin_route.get('/shipping', adminAuth.isLogin, orderController.shippedOrder)
@@ -62,6 +64,9 @@ admin_route.get('/delivered', adminAuth.isLogin, orderController.deliveredOrder)
 admin_route.get('/cancelOrderadmin', adminAuth.isLogin, orderController.cancelOrderadmin)
 
 
+
+//SALES REPORT/////////////////////////////////////////////////////////////////////////
+admin_route.get('/salesReport',adminAuth.isLogin,orderController.salesReport)
 //COUPON///////////////////////////////////////////////////////////////////////////////
 admin_route.get('/couponList', adminAuth.isLogin, couponController.loadCouponlist)
 admin_route.get('/addCoupon', adminAuth.isLogin, couponController.loadAddcoupon)
@@ -69,6 +74,24 @@ admin_route.post('/addCoupon', adminAuth.isLogin, couponController.addNewCoupon)
 admin_route.get('/editCoupon', adminAuth.isLogin, couponController.loadeditCoupon)
 admin_route.post('/editCoupon', adminAuth.isLogin, couponController.editCoupon)
 
+
+
+//Banner///////////////////////////////////////////////////////////////////////////////
+admin_route.get('/bannerlist',adminAuth.isLogin,bannerController.loadBanner)
+admin_route.get('/addBanner',adminAuth.isLogin,bannerController.loadaddBanner)
+admin_route.post('/addBanner',upload.single('image'),bannerController.addBanner)
+admin_route.get('/editBanner',adminAuth.isLogin,bannerController.loadeditBanner)
+admin_route.post('/editBanner',upload.single('image'),bannerController.editBanner)
+admin_route.get('/deleteBanner',bannerController.deleteBanner)
+
+
+
+//OFFER////////////////////////////////////////////////////////////////////////////////
+admin_route.get('/offerlist',adminAuth.isLogin,offerController.loadOffer)
+admin_route.get('/addOffer',adminAuth.isLogin,offerController.loadaddOffer)
+admin_route.post('/addOffer',offerController.addOffer)
+admin_route.patch('/apply-product-offer',productController.applyProductOffer)
+admin_route.patch('/remove-product-offer',productController.removeProductOffer)
 
 
 

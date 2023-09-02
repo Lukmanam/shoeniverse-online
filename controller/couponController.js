@@ -113,7 +113,7 @@ const applycoupon = async (req, res) => {
             if (couponData.minCartAmount >= amount) {
               res.json({ cartAmount: true });
             } else {
-              // await Coupon.findByIdAndUpdate(couponData._id, { $push: { usedUsers: req.session.user_id }});
+              await Coupon.findByIdAndUpdate(couponData._id, { $push: { usedUsers: req.session.user_id }});
               if (couponData.discountType == "Fixed Amount") {
                 const discAmount = couponData.discountAmount;
                 const disTotal = Math.round(amount - discAmount);

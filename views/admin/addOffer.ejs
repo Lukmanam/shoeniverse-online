@@ -1,0 +1,37 @@
+<%- include("../layouts/adminlayout/header.ejs") %>
+
+    <body>
+        <main class="main-wrap">
+            <section class="content-main">
+                <div class="content-header">
+                    <h2 class="content-title card-title">Add Offer</h2>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form action="/admin/addOffer" method="POST">
+                            <div class="mb-3">
+                                <label for="offerName" class="form-label">Offer Name</label>
+                                <input type="text" class="form-control" id="offerName" name="name" pattern="^[A-Za-z0-9]+(?:\s[A-Za-z0-9]+)*$" required>
+                            </div>
+                           
+                            <div class="mb-3">
+                                <label for="starting date" class="form-label">Starting Date</label>
+                                <input type="date" class="form-control" id="startingDate" name="startingDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="expiry date" class="form-label">Expiry Date</label>
+                                <input type="date" class="form-control" id="expiryDate" name="expiryDate"required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="percentage" class="form-label">Percentage</label>
+                                <input type="number" class="form-control" id="percentage" name="percentage"required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Offer</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+
+    <%- include("../layouts/adminlayout/footer.ejs") %>

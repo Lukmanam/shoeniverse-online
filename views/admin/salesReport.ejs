@@ -1,0 +1,215 @@
+<%- include('../layouts/adminlayout/header.ejs')%>
+
+
+
+<main class="main-wrap">
+
+  <section class="content-main">
+    <div class="content-header">
+      <div>
+        <h2 class="content-title card-title">SALES REPORT</h2>
+        <p>Sales Report </p>
+      </div>
+
+      <div>
+        <button href="#" class="btn btn-light rounded font-md" onclick="generateExcel()">Excel</button>
+        <button class="btn btn-light rounded font-md" onclick="generatePDF()">PDF Download</button>
+      </div>
+    </div>
+    <div class="card mb-4">
+      <header class="card-header">
+        <div class="row gx-3">
+          <div class="col-lg-4 col-md-6 me-auto">
+            <form action="/admin/salesReport" method="GET">
+              <input type="text" name="search" placeholder="Search..." class="form-control" value="<%= search || '' %>">
+              <button type="submit" class="btn btn-sm font-sm rounded btn-brand mt-3">Search</button>
+            </form>
+          </div>
+          <div class="col-lg-2 col-md-3 col-6">
+            <form action="/admin/salesReport" method="GET">
+              <select class="form-select" name="status">
+                <!-- <option value="">Show all</option>
+                <option value="placed" <%= status === 'placed' ? 'selected' : '' %>>Placed</option> -->
+                <option value="Delivered" <%= status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                <!-- <option value="Cancelled" <%= status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                <option value="Shipped" <%= status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                <option value="returned"<%= status === 'Returned' ? 'selected' : '' %>>Returned</option>
+                <option value="pending"<%= status === 'pending' ? 'selected' : '' %>>Pending</option>
+                 -->
+              </select>
+              
+            <!-- </form> -->
+          </div>
+          
+          <div class="col-lg-6 col-md-3 mt-md-0 mt-3 row g-2">
+            <!-- <form action="/admin/salesReport" class="row g-2"> -->
+              <div class="col-md-4 mt-0">
+                
+                <input type="date" class="form-control" id="fromDate" name="from" value="<%= from %>">
+              </div>
+              <div class="col-md-4 mt-0">
+                
+                <input type="date" class="form-control" id="toDate" name="to" value="<%= to %>">
+              </div>
+              <div class="col-md-2 mt-2 mt-md-0">
+                <button class="btn btn-primary">Filter</button>
+              </div>
+            </form>
+          </div>
+          </div>
+          
+        </div>
+    </div>
+    </header>
+    <!-- card-header end// -->
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>#ID</th>
+              <th>Billing Name</th>
+              <th scope="col">Date</th>
+              <th scope="col">Total</th>
+              <th scope="col">Status</th>
+              <th scope="col">Pay Method</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <% if (orders.length === 0) { %>
+              <!-- Display "No orders found" message when there are no results -->
+              <tr>
+                  <td colspan="6">No orders found</td>
+              </tr>
+              <% } else { %>
+            <% orders.forEach(orders=>{ %>
+            <tr>
+              <td><b><%= orders._id %></b></td>
+              <td><%= orders.userName %></td>
+              <td><b> <%= orders.date.toLocaleDateString() %></b></td>
+              <td>₹<%= orders.totalAmount  %></td>
+
+              <td>
+                <%= orders.status %>
+
+              <td>
+                <%= orders.paymentMethod  %></td>
+            
+            </tr>
+
+            <%})%>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <!-- table-responsive //end -->
+    </div>
+    <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+   <!-- Pagination Area -->
+<div class="pagination-area mt-15 mb-50">
+  <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-start">
+          <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                  <a class="page-link" href="/admin/salesReport?page=<%= i %>&search=<%= search || '' %>&status=<%= status || '' %>&from=<%= from || '' %>&to=<%= to || '' %>"><%= i %></a>
+              </li>
+          <% } %>
+      </ul>
+  </nav>
+</div>
+
+  </section>
+
+
+  <script>
+    function generatePDF() {
+      const orders = document.querySelectorAll('.table tbody tr');
+
+      const orderRows = [];
+      orders.forEach(order => {
+        const orderId = order.cells[0].innerText;
+        const user = order.cells[1].innerText;
+        const Date = order.cells[2].innerText;
+        const Total = order.cells[3].innerText;
+        const Status = order.cells[4].innerText;
+        const PayMethod = order.cells[5].innerText;
+
+        orderRows.push([orderId, user, Date, Total, Status, PayMethod]);
+      });
+
+      const pdfFormat = {
+        content: [
+          {
+            text: 'SALES REPORT',
+            style: 'header'
+          },
+          {
+            table: {
+              headerRows: 1,
+              widths:[80, 100, 80, 60, 70, 90],
+              body: [
+                [{ text: 'Order ID', fillColor: '#dbc995' }, // Adding background color to header cells
+            { text: 'User', fillColor: '#dbc995' },
+            { text: 'Date', fillColor: '#dbc995' },
+            { text: 'Total', fillColor: '#dbc995' },
+            { text: 'Status', fillColor: '#dbc995' },
+            { text: 'Payment Method', fillColor: '#dbc995' }],
+                ...orderRows
+              ]
+            },
+            layout: 'lightHorizontalLines' // Add light horizontal lines to the table
+          }
+        ],
+        styles: {
+          header: {
+            fontSize: 20,
+            bold: true,
+            alignment: 'center',
+            margin: [0, 0, 0, 10]
+          }
+        }
+      };
+
+      pdfMake.createPdf(pdfFormat).print();
+    }
+    // Excel Download
+    function generateExcel() {
+      const orders = document.querySelectorAll('.table tbody tr');
+
+      const orderData = [];
+      orders.forEach(order => {
+        const orderId = order.cells[0].innerText;
+        const Date = order.cells[1].innerText;
+        const Total = order.cells[2].innerText;
+        const status = order.cells[3].innerText;
+        const PayMethod = order.cells[4].innerText;
+
+
+
+        orderData.push([orderId, Date, Total, status, PayMethod]);
+      });
+
+      const header = ['orderId', 'Date', 'Total', 'Status', 'PayMethod'];
+      const data = [header, ...orderData];
+
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sales Report');
+
+      // Generating filename based on the current date and time
+      const filename = 'Sales_Report_' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.xlsx';
+
+      // Convert the workbook to a binary Excel file and trigger the download
+      XLSX.writeFile(wb, filename);
+    }
+  </script>
+
+
+
+
+
+  <!-- content-main end// -->
+  <%- include('../layouts/adminlayout/footer.ejs') %>
