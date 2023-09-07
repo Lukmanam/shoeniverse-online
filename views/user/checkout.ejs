@@ -15,83 +15,70 @@
 
 	<section class="ftco-section">
 		<div class="container">
+			
 			<div class="row justify-content-center">
 				<div class="col-xl-10 ftco-animate">
 					<form id="checkout-form" class="billing-form">
-						<div class="container d-flex ps-3 text-center">
-							<% addresses.forEach(x=>{%>
+    <h3 class="billing-heading mb-4 pl-4">ORDER SUMMARY</h3>
+    <div class="container">
+        <div class="row">
+            <!-- Order Summary Section -->
+			<div class="col-md-6">
+				<div class="card border-0">
+					<div class="card-body bg-light">
+						<h4 class="card-title">Items</h4>
+						<ul class="list-group list-group-flush "> <!-- Add the list-group-flush class here -->
+							<% if (cartData) { %>
+								<% products.forEach((product) => { %>
+									<li class="list-group-item bg-light">
+										<span class="img float-lg-start pr-4" ><img src="/adminAsset/IMAGES/<%=product.productId.image[0]%>" style="width: 40px; height: 40px;" alt=""></span>
+										<span class="float-lg-start  pl-3"><%= product.productId.name %></span>
+										<span class="pr-5 pl-5">x<%= product.count %></span>  
+										<span class="float-end">₹<%= product.productPrice %></span>
+									</li>
+								<% }); %>
+							<% } %>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
 
-								<div class="card ml-3 " style="width: 18rem;">
-									<div class="card-body">
-										<input type="radio"
-											value="<%=x.userName%>,<%=x.mobile%>,<%=x.alternativeMob%>,<%=x.address%>,<%=x.city%>,<%=x.state%>,<%=x.pincode%>"
+            <!-- Address List Section -->
+			<div class="col-md-6">
+				<div class="card border-0">
+					<div class="card-body bg-light">
+						<h4 class="card-title">Select an Address</h4>
+						<ul class="list-group list-group-flush"> <!-- Add the list-group-flush class here -->
+							<% addresses.forEach(x => { %>
+								<li class="list-group-item bg-light">
+									<label class="pl-3">
+										<input type="radio" class="form-check-input"
+											value="<%= x.userName %>,<%= x.mobile %>,<%= x.alternativeMob %>,<%= x.address %>,<%= x.city %>,<%= x.state %>,<%= x.pincode %>"
 											name="selectAddress" required>
-										<h5 class="card-title">
-											<%=x.userName%>
-										</h5>
-										<ul class="list-group">
-
-											<li class="list-group-item d-flex justify-content-between">
-												<span>Phone: </span>
-												<span>
-													<%=x.mobile%>
-												</span>
-											</li>
-											<li class="list-group-item d-flex justify-content-between">
-												<span>Alt Mobile: </span>
-												<span>
-													<%=x.alternativeMob %>
-												</span>
-											</li>
-
-											<li class="list-group-item d-flex justify-content-between">
-												<span>Address:</span>
-												<span>
-													<%=x.address%>
-												</span>
-											</li>
-											<li class="list-group-item d-flex justify-content-between">
-												<span>City: </span>
-												<span>
-													<%=x.city%>
-												</span>
-											</li>
-											<li class="list-group-item d-flex justify-content-between">
-												<span>State: </span>
-												<span>
-													<%=x.state%>
-												</span>
-											</li>
-											<li class="list-group-item d-flex justify-content-between">
-												<span>Pincode: </span>
-												<span>
-													<%=x.pincode%>
-												</span>
-											</li>
-											<li class="list-group-item d-flex justify-content-between">
-												<span>Landmark</span>
-												<span>
-													<%=x.landmark%>
-												</span>
-											</li>
-
-										</ul>
-
-
-									</div>
-								</div>
-								<%})%>
-
+										<span><strong><%= x.userName %></strong></span>
+										<span class="float-end"><%= x.address %>, <%= x.city %>, <%= x.landmark %>, <%= x.state %>, <%= x.pincode %></span>
+									</label>
+								</li>
+							<% }) %>
+						</ul>
+						<div class="col-md-6 text-center">
+							<a href="/addAddress" class="btn-sm btn-dark float-end">Add New Address</a>
 						</div>
-						<div class="row justify-content-center mt-3">
-							<div class="col-md-6 text-center">
-								<a href="/addAddress" class="btn btn-primary">Add New Address</a>
-							</div>
-						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+			</div>
+			
+
+						<!-- <div class="row justify-content-center mt-3">
+							
+						</div> -->
 						<div class="row mt-5 pt-3 d-flex">
 							<div class="col-md-6 d-flex">
-								<div class="cart-detail cart-total bg-light p-3 p-md-4">
-									<h3 class="billing-heading mb-4">Cart Total</h3>
+								<div class="cart-detail cart-total bg-light p-4 p-md-4">
+									<h3 class="billing-heading mb-4">Cart SUMMARY</h3>
 									<p class="d-flex">
 										<span>Subtotal</span>
 										<span id="total">
@@ -116,7 +103,7 @@
 									</p>
 								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-6 pl-3">
 								<div class="cart-detail bg-light p-3 p-md-4">
 									<h3 class="billing-heading mb-4">Payment Method</h3>
 									<div class="form-group">

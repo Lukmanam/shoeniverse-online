@@ -8,15 +8,13 @@
 <section class="ftco-section bg-light">
   <div class="container">
     <div class="text-right mt-5 mr-5 text-white">
-      <a href="/profile"> <button class=" btn-dark btn-sm">Back</button></a>
+      <a href="/profile"> <button class="btn-dark btn-sm">Back</button></a>
     </div>
     <div class="row justify-content-center">
       <div class="col-md-12 mt-5">
         <div class="text-center mt-0 mb-5">
           <h2>Order History</h2>
-        
-        
-      </div>
+        </div>
         <div class="table-responsive">
           <table class="table table-striped">
             <thead class="bg-primary">
@@ -36,7 +34,11 @@
               <tr>
                 <td><%= order.date.toLocaleDateString() %></td>
                 <td>
-                  <img src="/adminAsset/IMAGES/<%= product.productId.image[0] %>" alt="Product Image" style="width: 100px; height: 100px" />
+                  <img
+                    src="/adminAsset/IMAGES/<%= product.productId.image[0] %>"
+                    alt="Product Image"
+                    style="width: 100px; height: 100px"
+                  />
                 </td>
                 <td><%= product.productId.name %></td>
                 <td><%= product.productPrice %></td>
@@ -55,8 +57,11 @@
                 </td>
                 <td>
                   <% if (order.status=="Delivered" ) { %>
-                    <div>
-                    <button class="btn-sm font-sm btn-danger" onclick="confirmReturn('<%= order._id %>')">
+                  <div>
+                    <button
+                      class="btn-sm font-sm btn-danger"
+                      onclick="confirmReturn('<%= order._id %>')"
+                    >
                       Return
                     </button>
                   </div>
@@ -74,16 +79,21 @@
                   </div>
                   <% } else { %>
                   <div>
-                    <button class="btn-sm font-sm btn-danger" onclick="confirmCancel('<%= order._id %>')">
+                    <button
+                      class="btn-sm font-sm btn-danger"
+                      onclick="confirmCancel('<%= order._id %>')"
+                    >
                       Cancel
                     </button>
                   </div>
                   <% } %>
                 </td>
                 <td>
-                  <a href="/orderDetails?id=<%= order._id %>"><button class="btn-sm font-sm btn-primary">
+                  <a href="/orderDetails?id=<%= order._id %>"
+                    ><button class="btn-sm font-sm btn-primary">
                       Details
-                    </button></a>
+                    </button></a
+                  >
                 </td>
               </tr>
               <% }); %> <% }); %>
@@ -98,110 +108,150 @@
   </div>
 </section>
 
-
 <script>
-  function confirmCancel(orderId)
-  {
-    swal.fire({
-      title: 'Are you sure?',
-            text: "You Want to Cancel this Order?",
-            icon: 'warning',
+  function confirmCancel(orderId) {
+    swal
+      .fire({
+        title: "Are you sure?",
+        text: "You Want to Cancel this Order?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!",
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            input: "textarea",
+            inputLabel: "Reason For Cancellation",
+            inputPlaceholder:
+              "Please indicate the reason for Cancelling your order",
+            inputAttributes: {
+              "aria-label": "Type your message here",
+            },
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-    
-  })
-  .then((result) => {
-            if (result.isConfirmed) {
-				Swal.fire(
-					'Cancelled!',
-					'Order has been Cancelled.',
-					'success'
-					)
-					cancel(orderId)
-				}
-				setTimeout(()=>{
+            confirmButtonText: "Submit", // Change the button text to "Submit"
+          }).then((inputResult) => {
+            if (inputResult.isConfirmed) {
+              const text = inputResult.value;
+              
+            cancel(orderId, text); // Pass the reason to cancel function
+            Swal.fire(
+                "Return Confirmed!",
+                "Order has been Returned.",
+                "success"
+              );
+              
+            }
 
-					window.location.reload();
-				},1000)
-			});
-  }
-
-
-  function cancel(orderId) {
-     
-      $.ajax({
-        url: "/cancelOrder",
-        data: {
-          orderId: orderId,
-        },
-        method: "post",
-        success: (response) => {
-          if (response.success) {
-            toastr.success("Order canceled successfully!", "Success", {
-              timeOut: 3000,
-              closeButton: true,
-              progressBar: true,
-            });
-            location.reload();
-          }
-        },
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          });
+        }
       });
-    }
-  
-
-  function confirmReturn(orderId)
-  {
-    swal.fire({
-      title: 'Are you sure?',
-            text: "You Want to Return this Order?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-    
-  })
-  .then((result) => {
-            if (result.isConfirmed) {
-				Swal.fire(
-					'Return Confirmed!',
-					'Order has been Returned.',
-					'success'
-					)
-					returnOrder(orderId)
-				}
-				setTimeout(()=>{
-
-					window.location.reload();
-				},1000)
-			});
   }
-  </script>
+
+  function cancel(orderId,text) {
+    $.ajax({
+      url: "/cancelOrder",
+      data: {
+        orderId: orderId,
+        reason: text,
+      },
+      method: "post",
+      success: (response) => {
+        if (response.success) {
+          toastr.success("Order canceled successfully!", "Success", {
+            timeOut: 3000,
+            closeButton: true,
+            progressBar: true,
+          });
+          location.reload();
+        }
+      },
+    });
+  }
+
+  function confirmReturn(orderId) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to return this order?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!",
+    })
+      // .then((result) => {
+      //           if (result.isConfirmed) {
+      // 			Swal.fire(
+      // 				'Return Confirmed!',
+      // 				'Order has been Returned.',
+      // 				'success'
+      // 				)
+      // 				returnOrder(orderId)
+      // 			}
+      // 			setTimeout(()=>{
+
+      // 				window.location.reload();
+      // 			},1000)
+      // 		});
+      .then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            input: "textarea",
+            inputLabel: "Reason For Return",
+            inputPlaceholder:
+              "Please indicate the reason for returning your order",
+            inputAttributes: {
+              "aria-label": "Type your message here",
+            },
+            showCancelButton: true,
+            confirmButtonText: "Submit", // Change the button text to "Submit"
+          }).then((inputResult) => {
+            if (inputResult.isConfirmed) {
+              const text = inputResult.value;
+
+              returnOrder(orderId, text); // Pass the reason to returnOrder function
+
+              Swal.fire(
+                "Return Confirmed!",
+                "Order has been Returned.",
+                "success"
+              );
+            }
+
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          });
+        }
+      });
+  }
+</script>
 <script>
-  
- function returnOrder(orderId)
-  {
-     
-     $.ajax({
-       url: "/returnOrder",
-       data: {
-         orderId: orderId,
-       },
-       method: "post",
-       success: (response) => {
-         if (response.success) {
-           toastr.success("Order Returned successfully!", "Success", {
-             timeOut: 3000,
-             closeButton: true,
-             progressBar: true,
-           });
-           location.reload();
-         }
-       },
-     });
-   }
-  </script>
+  function returnOrder(orderId, text) {
+    $.ajax({
+      url: "/returnOrder",
+      data: {
+        orderId: orderId,
+        reason: text, // Pass the input text to the server
+      },
+      method: "post",
+      success: (response) => {
+        if (response.success) {
+          toastr.success("Order Returned successfully!", "Success", {
+            timeOut: 3000,
+            closeButton: true,
+            progressBar: true,
+          });
+          location.reload();
+        }
+      },
+    });
+  }
+</script>
 
 <%- include('../layouts/userlayout/footer.ejs') %>

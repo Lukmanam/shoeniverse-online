@@ -1,127 +1,126 @@
 <%- include('../layouts/adminlayout/header.ejs') %>
-    <main class="main-wrap">
-       
-        <section class="content-main">
-            <div class="content-header">
-                <div>
-                    <h2 class="content-title card-title">Order detail</h2>
-                    <p>Details for Order ID:<strong>
-                            <%= order._id %>
-                        </strong></p>
-                </div>
-            </div>
-            <div class="card">
-                <header class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
-                            <span> <i class="material-icons md-calendar_today"></i> <b>Date:<%=
+<main class="main-wrap">
+
+  <section class="content-main">
+    <div class="content-header">
+      <div>
+        <h2 class="content-title card-title">Order detail</h2>
+        <p>Details for Order ID:<strong>
+            <%= order._id %>
+          </strong></p>
+      </div>
+    </div>
+    <div class="card">
+      <header class="card-header">
+        <div class="row align-items-center">
+          <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+            <span> <i class="material-icons md-calendar_today"></i> <b>Date:<%=
                                         order.date.toLocaleDateString() %></b> </span> <br />
-                            <small class="text-muted">Order ID:<%= order._id %></small>
-                        </div>
-                       
-                    </div>
-                </header>
-                <!-- card-header end// -->
-                <div class="card-body">
-                    <div class="row mb-50 mt-20 order-info-wrap">
-                        <div class="col-md-4">
-                            <article class="icontext align-items-start">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-person"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Customer</h6>
-                                    <p class="mb-1">
-                                        <%= order.userName %> <br />
-                                            <%= user.email%> <br />
-                                    </p>
-                                    <a href="#">View profile</a>
-                                </div>
-                            </article>
-                        </div>
-                        <!-- col// -->
-                        <div class="col-md-4">
-                            <article class="icontext align-items-start">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-local_shipping"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Order info</h6>
-                                    <p class="mb-1">
-                                        <br />
-                                        Pay method:<%= order.paymentMethod %><br />
-                                            Status: <%= order.status %>
-                                    </p>
-                                    <a href="#">Download info</a>
-                                </div>
-                            </article>
-                        </div>
-                        <!-- col// -->
-                        <div class="col-md-4">
-                            <article class="icontext align-items-start">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-place"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Deliver to</h6>
-                                    <p class="mb-1">
-                                        <%= order.deliveryAddress %>
-                                    </p>
-                                    <a href="#">View profile</a>
-                                </div>
-                            </article>
-                        </div>
-                        <!-- col// -->
-                    </div>
-                    <!-- row // -->
-                    <div class="row">
-                        <div class="col-lg-7">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th width="40%">Product</th>
-                                            <th name>Name</th>
-                                            <th width="20%">Unit Price</th>
-                                            <th width="20%">Quantity</th>
-                                            <!-- <th width="20%" class="text-end">Total</th> -->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% order.products.forEach(order=>{%>
+            <small class="text-muted">Order ID:<%= order._id %></small>
+          </div>
+
+        </div>
+      </header>
+      <!-- card-header end// -->
+      <div class="card-body">
+        <div class="row mb-50 mt-20 order-info-wrap">
+          <div class="col-md-4">
+            <article class="icontext align-items-start">
+              <span class="icon icon-sm rounded-circle bg-primary-light">
+                <i class="text-primary material-icons md-person"></i>
+              </span>
+              <div class="text">
+                <h6 class="mb-1">Customer</h6>
+                <p class="mb-1">
+                  <%= order.userName %> <br />
+                  <%= user.email%> <br />
+                </p>
+                <a href="#">View profile</a>
+              </div>
+            </article>
+          </div>
+          <!-- col// -->
+          <div class="col-md-4">
+            <article class="icontext align-items-start">
+              <span class="icon icon-sm rounded-circle bg-primary-light">
+                <i class="text-primary material-icons md-local_shipping"></i>
+              </span>
+              <div class="text">
+                <h6 class="mb-1">Order info</h6>
+                <p class="mb-1">
+                  <br />
+                  Pay method:<%= order.paymentMethod %><br />
+                  Status: <%= order.status %>
+                </p>
+                <a href="#">Download info</a>
+              </div>
+            </article>
+          </div>
+          <!-- col// -->
+          <div class="col-md-4">
+            <article class="icontext align-items-start">
+              <span class="icon icon-sm rounded-circle bg-primary-light">
+                <i class="text-primary material-icons md-place"></i>
+              </span>
+              <div class="text">
+                <h6 class="mb-1">Deliver to</h6>
+                <p class="mb-1">
+                  <%= order.deliveryAddress %>
+                </p>
+                <a href="#">View profile</a>
+              </div>
+            </article>
+          </div>
+          <!-- col// -->
+        </div>
+        <!-- row // -->
+        <div class="row">
+          <div class="col-lg-7">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th width="40%">Product</th>
+                    <th name>Name</th>
+                    <th width="20%">Unit Price</th>
+                    <th width="20%">Quantity</th>
+                    <!-- <th width="20%" class="text-end">Total</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <% order.products.forEach(order=>{%>
 
 
-                                            <tr>
-                                                <td>
-                                                    <img src="/adminAsset/IMAGES/<%= order.productId.image[0] %>"
-                                                        alt="Product Image" style="width: 100px; height: 100px;">
+                  <tr>
+                    <td>
+                      <img src="/adminAsset/IMAGES/<%= order.productId.image[0] %>" alt="Product Image" style="width: 100px; height: 100px;">
 
-                                                    <a class="itemside" href="#">
+                      <a class="itemside" href="#">
 
-                                                <td>
-                                                    <div class="info">
-                                                        <%= order.productId.name%>
-                                                </td>
-                            </div>
-                            </a>
-                            </td>
-                            <td>
-                                <%= order.productId.price%>
-                            </td>
-                            <td>
-                                <%= order.count%>
-                            </td>
-                            <!-- <td class="text-end"><%= order.productId.price%></td> -->
-                            </tr>
-                            <tr>
-                                <%}) %>
-                                    </tbody>
-                                    </table>
-                        </div>
-                        <!-- table-responsive// -->
-                    </div>
-                    <!-- col// -->
-                    <!-- <div class="col-lg-1"></div>
+                    <td>
+                      <div class="info">
+                        <%= order.productId.name%>
+                    </td>
+            </div>
+            </a>
+            </td>
+            <td>
+              <%= order.productId.price%>
+            </td>
+            <td>
+              <%= order.count%>
+            </td>
+            <!-- <td class="text-end"><%= order.productId.price%></td> -->
+            </tr>
+            <tr>
+
+              </tbody>
+              </table>
+          </div>
+          <!-- table-responsive// -->
+        </div>
+        <!-- col// -->
+        <!-- <div class="col-lg-1"></div>
                             <div class="col-lg-4">
                                 <div class="box shadow-sm bg-light">
                                     <h6 class="mb-15">Payment info</h6>
@@ -131,44 +130,58 @@
                                         Phone: +1 (800) 555-154-52
                                     </p>
                                 </div> -->
-                    <div class="h-25 pt-4">
-                        <div class="mb-3">
-                            <label>Notes</label>
-                            <textarea class="form-control" name="notes" id="notes"
-                                placeholder="Type some note"></textarea>
-                        </div>
-                        <button class="btn btn-primary">Save note</button>
-                    </div>
-                </div>
-                <!-- col// -->
-            </div>
-            </div>
-            <!-- card-body end// -->
-            </div>
-            <!-- card end// -->
-        </section>
-        <!-- content-main end// -->
-        <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script>
-                        document.write(new Date().getFullYear());
-                    </script>
-                    &copy; Nest - HTML Ecommerce Template .
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">All rights reserved</div>
-                </div>
-            </div>
-        </footer>
-    </main>
-    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/vendors/select2.min.js"></script>
-    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-    <!-- Main Script -->
-    <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    </body>
+        <div class="h-25 pt-4">
+          <div class="mb-3">
 
-    </html>
+
+            <%}) %>
+            <% if(order.returnReason){ %>
+            <h6 class="text-danger">Returned Reason :</h6>
+            <div class="container  card-body bg-light text-truncate">
+            <%=order.returnReason%>
+            </div>
+            <% }else if(order.cancelReason){ %>
+                <h6 class="text-danger">Cancelled Reason :</h6>
+                <div class="container  card-body bg-light">
+                   <strong> <%=order.cancelReason%></strong>
+                  </div>
+                <% } else{%>
+                    <div class="mb-3">
+                        <label>Notes</label>
+                        <textarea class="form-control" name="notes" id="notes" readonly></textarea>
+                    </div>
+                    <% } %>
+
+          </div>
+          <!-- col// -->
+        </div>
+      </div>
+      <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+  </section>
+  <!-- content-main end// -->
+  <footer class="main-footer font-xs">
+    <div class="row pb-30 pt-15">
+      <div class="col-sm-6">
+        <script>
+          document.write(new Date().getFullYear());
+        </script>
+        &copy; Nest - HTML Ecommerce Template .
+      </div>
+      <div class="col-sm-6">
+        <div class="text-sm-end">All rights reserved</div>
+      </div>
+    </div>
+  </footer>
+</main>
+<script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+<script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="assets/js/vendors/select2.min.js"></script>
+<script src="assets/js/vendors/perfect-scrollbar.js"></script>
+<script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+<!-- Main Script -->
+<script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+</body>
+
+</html>

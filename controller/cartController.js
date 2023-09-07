@@ -11,8 +11,8 @@ const loadCart = async (req, res) => {
         const user = req.session.user_id;
         const id = req.session.user_id;
         const userData = await User.findOne({ _id: id });
-        const cartData = await Cart.findOne({ user: id }).populate("products.productId" )
-        .populate('products.productId.offer')
+            const cartData = await Cart.findOne({ user: id }).populate("products.productId" )
+            .populate('products.productId.offer')
 
         if (req.session.user_id) {
             if (cartData) {
@@ -168,7 +168,9 @@ const changeQuantity = async (req, res, next) => {
         const [{ count: quantity }] = cartData.products;
         const productData = await Product.findOne({ _id: proId });
         const total = productData.price * (quantity + count);
-        if (productData.stock < quantity + count) {
+        console.log(productData.quantity);
+        console.log(count)
+        if (productData.quantity < quantity + count) {
             res.json({ check: true });
         } else {
             res.json({ success: true });
@@ -176,6 +178,8 @@ const changeQuantity = async (req, res, next) => {
                 { user: userId, "products.productId": proId },
                 { $inc: { "products.$.count": count } }
             );
+                
+
         }
     } catch (error) {
         console.log(error.message);
@@ -229,10 +233,14 @@ const changeQuantity = async (req, res, next) => {
 //   };
 const loadCheckout = async (req, res, next) => {
     try {
+        const id = req.session.user_id;
         const user = req.session.user_id;
         const userData = await User.findOne({ _id: req.session.user_id });
         const addressData = await Address.findOne({ userId: req.session.user_id });
         const coupon = await Coupon.find({expired : { $gte : new Date() } });
+        const cartData = await Cart.findOne({ user: id }).populate("products.productId" )
+        .populate('products.productId.offer')
+        console.log(cartData.products[0].productId,"this cartdata to Checkout");
 
         // const wallet = await Wallet.findOne({ userId: req.session.user_id });
         // const coupons = await Coupon.find({ status: true, usedUsers: { $ne: req.session.user_id },expired: { $gte: new Date() } });
@@ -262,7 +270,7 @@ const loadCheckout = async (req, res, next) => {
             ]);
             
             const Total = total[0].total;
-            res.render("checkout", { user, addresses, userData, Total, coupon });
+            res.render("checkout", { user, addresses, userData, Total, coupon,cartData,products:cartData.products });
         } else {
             console.log("no address");
         }
@@ -278,4 +286,5 @@ module.exports = {
     removeFromCart,
     changeQuantity,
     loadCheckout,
+    
 };

@@ -116,12 +116,19 @@
 						</div>
 						<div class="w-100"></div>
 						<div class="col-md-12">
-							<p style="color: #000;">
-								<%= product.quantity %> piece available
-							</p>
+							
+							<% if (product.quantity > 0) { %>
+								<p style="color: #000;"><%= product.quantity %> piece available</p>
+							  <% } else { %>
+								<div class="btn  py-3 px-5 mr-2 btn-danger"><strong> Out Of Stock</strong></div>
+							  <% } %>
+							  
+							
 						</div>
 					</div>
-					<p><a href="/addToCart?id=<%=product._id %>" class="btn  py-3 px-5 mr-2 btn-black">Add to Cart</a>
+					<% if (product.quantity > 0) { %>
+					<p><a href="/addToCart?id=<%=product._id %>" class="btn  py-3 px-5 mr-2 btn-black">Add to Cart</a>  
+					<% }%>
 						<!-- <button class="btn-black" onclick="addToCart('<%=product._id %>')">
 					<i class="far fa-shopping-cart"></i>
 					<span>Add to Cart</span>

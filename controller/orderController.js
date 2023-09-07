@@ -279,6 +279,7 @@ const cancelOrder = async (req, res) => {
     try {
         const userId = req.session.user_id;
         const orderId = req.body.orderId;
+        const reason=req.body.reason
         const orderData = await Order.findOne({ _id: orderId });
         if (orderData) {
             if (orderData.status == "placed" || orderData.status == "shipped") {
@@ -289,9 +290,11 @@ const cancelOrder = async (req, res) => {
                         $inc: { quantity: count },
                     });
                 }
+                console.log(reason);
                 await Order.findByIdAndUpdate(orderId, {
-                    $set: { status: "Cancelled" },
+                    $set: { status: "Cancelled",cancelReason:reason },
                 });
+                console.log("Cancel Reason Added");
                 res.json({ success: true });
             } else {
                 await Order.findByIdAndUpdate(orderId, {
@@ -364,19 +367,24 @@ const returnOrder = async (req, res) => {
     try {
         const userId = req.session.user_id;
         const orderId = req.body.orderId;
+        const reason=req.body.reason
         const orderData = await Order.findOne({ _id: orderId });
         if (orderData) {
             if (orderData.status == "Delivered" || orderData.status == "shipped") {
                 for (const product of orderData.products) {
                     const productId = product.productId;
                     const count = product.count;
+                    
                     await Product.findByIdAndUpdate(productId, {
                         $inc: { quantity: count },
                     });
                 }
+                console.log(reason)
                 await Order.findByIdAndUpdate(orderId, {
-                    $set: { status: "returned" },
+                    $set: { status: "returned",returnReason:reason },
                 });
+                console.log("reason added");
+
                 res.json({ success: true });
             } else {
                 await Order.findByIdAndUpdate(orderId, {
