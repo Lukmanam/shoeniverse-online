@@ -122,24 +122,24 @@
 					<div class="sidebar">
 					</div>
 					<div class="sidebar-box-2">
-						<h2 class="heading">SORT PRICE </h2>
-						<form method="get" action="/shop">
-							<div class="row">
-								<div class="col-md-12">
-									<select class="form-select nice-select" name="price" id="price" onchange="this.form.submit()">
-										<% if (price === "High") { %>
-											<option value="Low">Price: Low to High</option>
-											<option value="High" selected>Price: High to Low</option>
-										<% } else { %>
-											<option value="Low" selected>Price: Low to High</option>
-											<option value="High">Price: High to Low</option>
-										<% } %>
-									</select>
-								</div>
-							</div>
-						</form>
-					</div>
-					
+    <h2 class="heading">SORT PRICE </h2>
+    <form method="get" action="/shop">
+        <div class="row">
+            <div class="col-md-12">
+                <select class="form-select nice-select" name="price" id="price" onchange="this.form.submit()">
+                    <% if (price === "High") { %>
+                        <option value="Low">Price: Low to High</option>
+                        <option value="High" selected>Price: High to Low</option>
+                    <% } else { %>
+                        <option value="Low" selected>Price: Low to High</option>
+                        <option value="High">Price: High to Low</option>
+                    <% } %>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
 				</div>
 			</div>
 		</div>
