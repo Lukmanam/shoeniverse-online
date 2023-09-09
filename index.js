@@ -8,9 +8,9 @@ const multer = require("multer");
 // const errorHandler=require('./middleware/errorhandler')
 
 const mongoose = require("mongoose");
-mongoose
-  .connect("mongodb://127.0.0.1:27017/shoeniverse")
-  // .connect("mongodb+srv://Lukman:Lukman123@cluster0.wkuk5ce.mongodb.net/shoeniverse")
+// mongoose
+//   .connect("mongodb://127.0.0.1:27017/shoeniverse")
+  .connect("mongodb+srv://Lukman:Lukman123@cluster0.wkuk5ce.mongodb.net/shoeniverse")
   .then(() => console.log("Connected to database"))
   .catch(() => console.log("error!! failed to connect database"));
 
