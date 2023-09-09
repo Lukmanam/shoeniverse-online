@@ -223,8 +223,9 @@ const loadshop = async (req, res) => {
     const page = Number(req.query.page) || 1;
     const limit = 12;
     const skip = (page - 1) * limit;
+    let price = req.query.price || "Low"; // Default to sorting by low to high if no option is selected
 
-    let price = req.query.value;
+    // let price = req.query.value;
     let categoryy = req.query.category || category;
     let Search = req.query.search || "";
     Search = Search.trim();
@@ -237,11 +238,11 @@ const loadshop = async (req, res) => {
       cat[i] = category[i].name;
     }
 
-    let sort;
+    let sort = price === "High" ? -1 : 1;
     // categoryy === "All"
     //   ? (categoryy = [...cat])
     //   : (categoryy = req.query.category.split(" "));
-    req.query.value === "High" ? (sort = -1) : (sort = 1);
+    // req.query.value === "High" ? (sort = -1) : (sort = 1);
 
     const producData = await productDB
       .find({
@@ -250,7 +251,8 @@ const loadshop = async (req, res) => {
         blocked: false,
       })
       .skip(skip)
-      .limit(limit).sort({sort})
+      .limit(limit)
+      .sort({ price: sort }) // Sort by price with the determined order
       .populate({
         path: "offer",
         $match: {
