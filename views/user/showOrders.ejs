@@ -20,8 +20,7 @@
             <thead class="bg-primary">
               <tr>
                 <th>Date</th>
-                <th>Product Image</th>
-                <th>Product Name</th>
+                <th>Order Id</th>
                 <th>Price</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -29,19 +28,11 @@
               </tr>
             </thead>
             <tbody>
-              <% Myorders.forEach(order=> { %> <%
-              order.products.forEach(product=> { %>
+              <% Myorders.forEach(order=> { %> 
               <tr>
                 <td><%= order.date.toLocaleDateString() %></td>
-                <td>
-                  <img
-                    src="/adminAsset/IMAGES/<%= product.productId.image[0] %>"
-                    alt="Product Image"
-                    style="width: 100px; height: 100px"
-                  />
-                </td>
-                <td><%= product.productId.name %></td>
-                <td><%= product.productPrice %></td>
+                <td><%= order._id %></td>
+                <td><%= order.totalAmount %></td>
                 <td>
                   <% if(order.status=="Cancelled" ) {%>
                   <p class="text-danger"><%= order.status %></p>
@@ -96,7 +87,7 @@
                   >
                 </td>
               </tr>
-              <% }); %> <% }); %>
+              <% }); %> 
             </tbody>
           </table>
         </div>
