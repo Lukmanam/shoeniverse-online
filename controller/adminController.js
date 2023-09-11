@@ -23,11 +23,7 @@ const loaddashboard = async (req, res) => {
     const currentMonth = now.getMonth();
     const currMonthStartDate = new Date(currentYear, currentMonth, 1, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
-    const ordersPerPage=10
     const yesterday = new Date(today.getDate() - 1);
-    const order = await Order.find()
-            .sort({ createdAt: -1 })
-            .limit(ordersPerPage);
 
     const promises = [
       dashboardHelper.totalRevenue(),
@@ -71,14 +67,13 @@ const loaddashboard = async (req, res) => {
       monthlyTotalRevenue,
       codPayAmount: codPayAmount, // Pass the result to the template
       onlinePayAmount: onlinePayAmount,
-      order
     });
   } catch (error) {
     console.log(error.message);
   }
 };
 
-//LOADLOGIN/////////////////////////////////////////////
+//LOADLOGIN///////////////////////////////////////
 const loadLogin = async (req, res) => {
   try {
     let { message } = req.session;
