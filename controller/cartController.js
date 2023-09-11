@@ -272,7 +272,32 @@ const loadCheckout = async (req, res, next) => {
             const Total = total[0].total;
             res.render("checkout", { user, addresses, userData, Total, coupon,cartData,products:cartData.products });
         } else {
-            console.log("no address");
+            const addresses = null
+            const total = await Cart.aggregate([
+                {
+                    $match: {
+                        userName: userData.name,
+                    },
+                },
+                {
+                    $unwind: "$products",
+                },
+                {
+                    $project: {
+                        productPrice: "$products.productPrice",
+                        count: "$products.count",
+                    },
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: ["$productPrice", "$count"] } },
+                    },
+                },
+            ]);
+            
+            const Total = total[0].total;
+            res.render("checkout", { user,addresses, userData, Total, coupon,cartData,products:cartData.products });
         }
     } catch (error) {
         console.log(error.message);
