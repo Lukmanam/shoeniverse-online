@@ -78,7 +78,7 @@ const loaddashboard = async (req, res) => {
   }
 };
 
-//LOADLOGIN///////////////////////////////////////
+//LOADLOGIN/////////////////////////////////////////////
 const loadLogin = async (req, res) => {
   try {
     let { message } = req.session;
