@@ -1,5 +1,5 @@
 const express = require("express");
-const app = express();
+const app = express();``
 const ejs = require("ejs");
 const session = require("express-session");
 const config = require("./config/config");

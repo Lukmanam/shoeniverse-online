@@ -4,8 +4,15 @@ const offerDB = require("../model/offerModel")
 //LOAD OFFER PAGE//////////////////////////////////////
 const loadOffer = async (req, res) => {
     try {
-      const offerData=await offerDB.find({})
-      const now=new Date()
+        const now=new Date()
+        const updateOfferData=await offerDB.find({})
+      
+        for (const offer of updateOfferData) {
+            if (offer.expiryDate < now) {
+                await offerDB.deleteOne({ _id: offer._id });
+            }
+        }       
+        const offerData = await offerDB.find({});
         res.render('offers', { offerData,now })
         
     } catch (error) {
@@ -37,6 +44,7 @@ const addOffer=async(req,res,next)=>{
     await offer.save()
     res.redirect("/admin/offerlist")
 }
+
 
 
 module.exports={

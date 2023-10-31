@@ -260,6 +260,8 @@ const loadshop = async (req, res) => {
           expiryDate: { $gte: new Date() },
         },
       });
+      console.log(new Date() )
+     
     console.log("Product Data After Search", producData);
 
     const productCount = await productDB.countDocuments({
