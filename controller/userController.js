@@ -6,6 +6,7 @@ const addressDB = require("../model/addressModel");
 const BannerDB = require("../model/bannerModel");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
+const offerDB = require("../model/offerModel")
 const { use } = require("../router/userRouter");
 dotenv.config();
 let otp;
@@ -331,6 +332,14 @@ const loadhome = async (req, res) => {
     const user = req.session.user_id;
     console.log(user, "this is home session");
     const bannerData = await BannerDB.find();
+    const now=new Date()
+        const updateOfferData=await offerDB.find({})
+      
+        for (const offer of updateOfferData) {
+            if (offer.expiryDate < now) {
+                await offerDB.deleteOne({ _id: offer._id });
+            }
+        }       
     const product = await productDB
       .find({ blocked: false })
       .populate({
