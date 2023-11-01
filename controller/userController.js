@@ -336,7 +336,7 @@ const loadhome = async (req, res) => {
         const updateOfferData=await offerDB.find({})
       
         for (const offer of updateOfferData) {
-            if (offer.expiryDate < now) {
+            if (offer.expiryDate <= now) {
                 await offerDB.deleteOne({ _id: offer._id });
             }
         }       
