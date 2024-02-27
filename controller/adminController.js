@@ -1,6 +1,6 @@
 const UserDB = require("../model/usermodel");
 const categoryDB = require("../model/categorymodel");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
 const path = require("path");
 const { log } = require("console");

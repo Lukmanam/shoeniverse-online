@@ -1,5 +1,5 @@
 const UserDB = require("../model/usermodel");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const productDB = require("../model/productModel");
 const categoryDB = require("../model/categorymodel");
 const addressDB = require("../model/addressModel");
