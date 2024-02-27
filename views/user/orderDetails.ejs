@@ -69,11 +69,11 @@
               <% orderData.products.forEach(product=> { %>
                 <tr>
                   <td>
-                    <img src="/adminAsset/IMAGES/<%= product.productId.image[0] %>" alt="Product Image"
+                    <img src="/adminAsset/IMAGES/<%= product.productId?.image[0] %>" alt="Product Image"
                       style="width: 100px; height: 100px;">
                   </td>
                   <td>
-                    <%= product.productId.name %>
+                    <%= product.productId?.name %>
                   </td>
                   <td>₹<%= product.productPrice %>
                   </td>
