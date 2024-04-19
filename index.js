@@ -5,6 +5,7 @@ const session = require("express-session");
 const config = require("./config/config");
 const nocache = require("nocache");
 const multer = require("multer");
+const job=require('./config/cron')
 // const errorHandler=require('./middleware/errorhandler')
 
 const mongoose = require("mongoose");
